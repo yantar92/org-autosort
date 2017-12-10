@@ -3,380 +3,389 @@
 #+EMAIL: yantar92@gmail.com
 #+FILETAGS: :COMMON:EMACS:ORGMODE:
 #+PROPERTY: header-args :tangle yes
+#+EXPORT_FILE_NAME: Readme.md
 
-* Motivation
-  For now, standard org capabilities allow to sort entries in the agenda views automatically. However, sorting of the actual org files is rather limited. We only have =org=sort= function, which allows to sort by one criteria only (not like =org-agenda-sorting-strategy= with multiple sort criteria). Moreover, it can be done manually only. 
+* TODO Automatic sorting of items in org mode
+** Motivation
+   For now, standard org capabilities allow to sort entries in the agenda views automatically. However, sorting of the actual org files is rather limited. We only have =org=sort= function, which allows to sort by one criteria only (not like =org-agenda-sorting-strategy= with multiple sort criteria). Moreover, it can be done manually only. 
 
-  Sometimes, one may have a need to look at some kind of long list of TODO items (for example, this infinitely growing list of things you wish to do one day, or list of ideas). It is not comfortable to scroll across such kind of list to look for specific item. Sorting is something, that can help here. 
+   Sometimes, one may have a need to look at some kind of long list of TODO items (for example, this infinitely growing list of things you wish to do one day, or list of ideas). It is not comfortable to scroll across such kind of list to look for specific item. Sorting is something, that can help here. 
 
-  Of course, you can still you =org-sort= or agenda view with restriction to the current subtree, but it may be disrupting if you want to look through multiple of such a lists. 
+   Of course, you can still you =org-sort= or agenda view with restriction to the current subtree, but it may be disrupting if you want to look through multiple of such a lists. 
 
-  The solution is to implement automatic sorting of subtrees in org files. 
-* Overview
-  This package aims to implement an automatic sorting of the subtrees in org files. The sorting order can be set globally through all the org files, locally in file, or locally in a subtree using =:SORT:= property. 
+   The solution is to implement automatic sorting of subtrees in org files. 
+** Overview
+   This package aims to implement an automatic sorting of the subtrees in org files. The sorting order can be set globally through all the org files, locally in file, or locally in a subtree using =:SORT:= property. 
 
-  Everything, except global sorting order, can be set using standard inheritance capabilities of the org properties (file local, subtree local with or without inheritance for subtrees inside the subtree). Global sorting order can be set via =org-autosort-global-sorting-strategy= variable.
-* Configuration
-  Both =:SORT:= property and =org-autosort-global-sorting-strategy= (default - =nil=) determine how to sort the entries.
+   Everything, except global sorting order, can be set using standard inheritance capabilities of the org properties (file local, subtree local with or without inheritance for subtrees inside the subtree). Global sorting order can be set via =org-autosort-global-sorting-strategy= variable.
+** Configuration
+   Both =:SORT:= property and =org-autosort-global-sorting-strategy= (default - =nil=) determine how to sort the entries.
 
-  Sorting is done using the first function in the list. If the keys, returned by function, are equal - comparison is done using keys, according to the second function from the list and so on.
+   Sorting is done using the first function in the list. If the keys, returned by function, are equal - comparison is done using keys, according to the second function from the list and so on.
 
-  The package provide some sorting functions, all are listed in =org-autosort-predicates-alist=.
+   The package provide some sorting functions, all are listed in =org-autosort-predicates-alist=.
 
-  The sorting can be done after opening the org file of after =C-c C-c=. =C-c C-c= will sort all entries in the file if the point is at the org file header or all entries in a subtree and its children subtrees if the point is at the org entry.
+   The sorting can be done after opening the org file of after =C-c C-c=. =C-c C-c= will sort all entries in the file if the point is at the org file header or all entries in a subtree and its children subtrees if the point is at the org entry.
 
-  Sorting at file open can be controlled by =org-autosort-sort-at-file-open=. When not =nil= - sort all entries in the org file after opening. Default is =t=
+   Sorting at file open can be controlled by =org-autosort-sort-at-file-open=. When not =nil= - sort all entries in the org file after opening. Default is =t=
 
-  Sorting after =C-c C-c= can be controlled by =org-autosort-sort-after-C-c-C-c=. When not =nil= - sort all entries in the subtree. Default is =t=. 
+   Sorting after =C-c C-c= can be controlled by =org-autosort-sort-after-C-c-C-c=. When not =nil= - sort all entries in the subtree. Default is =t=. 
 
-  When =org-autosort-sort-after-C-c-C-c-recutsive= is not =nil=, sort subtrees of current tree as well. Default is =nil=.
-* TODO Implementation                                              :NOEXPORT:
-  :LOGBOOK:
-  CLOCK: [2017-12-10 Sun 17:36]
-  CLOCK: [2017-12-10 Sun 10:21]--[2017-12-10 Sun 11:02] =>  0:41
-  :END:
-** NEXT Header
-   :PROPERTIES:
-   :ID:       3e603efc-e71a-4520-bcef-265cff481455
-   :END:
-   #+begin_src emacs-lisp
-     ;;; org-autosort.el --- Sort entries in org files automatically
-
-     ;; Author: Ihor Radchenko <yantar92@gmail.com>
-     ;; Created: 10 Dec 2017
-     ;; Version: 0.1
-     ;; Keywords: matching, outlines
-     ;; Homepage:
-     ;; Package-Requires: (org)
-
-     ;;; Commentary:
-
-     ;; This package aims to implement an automatic sorting of the subtrees in org files.
-     ;; The sorting order can be set globally through all the org files, locally in file, or locally in a subtree using =:SORT:= property.
-     ;; Everything, except global sorting order, can be set using standard inheritance capabilities of the org properties (file local, subtree local with or without inheritance for subtrees inside the subtree).
-     ;; Global sorting order can be set via =org-autosort-global-sorting-strategy= variable.
-
-     ;;; Code:
-   #+end_src
-** DONE Custom variables
-   CLOSED: [2017-12-10 Sun 17:33]
-   :PROPERTIES:
-   :ID:       08e58824-f88a-4d3b-a79e-00a1514eb68a
-   :END:
+   When =org-autosort-sort-after-C-c-C-c-recutsive= is not =nil=, sort subtrees of current tree as well. Default is =nil=.
+** TODO Implementation                                             :NOEXPORT:
    :LOGBOOK:
-   CLOCK: [2017-12-10 Sun 17:13]--[2017-12-10 Sun 17:33] =>  0:20
-   CLOCK: [2017-12-10 Sun 11:03]--[2017-12-10 Sun 11:35] =>  0:32
-   CLOCK: [2017-12-10 Sun 11:02]--[2017-12-10 Sun 11:03] =>  0:01
+   CLOCK: [2017-12-10 Sun 17:36]--[2017-12-10 Sun 20:02] =>  2:26
+   CLOCK: [2017-12-10 Sun 10:21]--[2017-12-10 Sun 11:02] =>  0:41
    :END:
-   #+begin_src emacs-lisp
-     (defgroup org-autosort nil
-       "Customization options of org-autosort package."
-       )
+*** NEXT Header
+    :PROPERTIES:
+    :ID:       3e603efc-e71a-4520-bcef-265cff481455
+    :END:
+    #+begin_src emacs-lisp
+      ;;; org-autosort.el --- Sort entries in org files automatically
 
-     (defcustom org-autosort-sort-at-file-open t
-       "Non nil states for sorting of all items in the org file after opening."
-       :type '(boolean)
-       )
+      ;; Author: Ihor Radchenko <yantar92@gmail.com>
+      ;; Created: 10 Dec 2017
+      ;; Version: 0.1
+      ;; Keywords: matching, outlines
+      ;; Homepage:
+      ;; Package-Requires: (org)
 
-     (defcustom org-autosort-sort-after-C-c-C-c t
-       "Non nil means sorting of a subtree at point after \org-ctrl-c-ctrl-c.
-     All the items are sorted if point is at the file header.
-     Sorting is recursive if org-autosort-sort-after-C-c-C-c-recursive is non nil."
-       :type '(boolean)
-       )
+      ;;; Commentary:
 
-     (defcustom org-autosort-sort-after-C-c-C-c-recursive nil
-       "If non nil, sort the subtrees recursively at a point after \org-ctrl-c-ctrl-c."
-       :type '(boolean)
-       )
+      ;; This package aims to implement an automatic sorting of the subtrees in org files.
+      ;; The sorting order can be set globally through all the org files, locally in file, or locally in a subtree using =:SORT:= property.
+      ;; Everything, except global sorting order, can be set using standard inheritance capabilities of the org properties (file local, subtree local with or without inheritance for subtrees inside the subtree).
+      ;; Global sorting order can be set via =org-autosort-global-sorting-strategy= variable.
 
-     (defcustom org-autosort-functions-alist '((org-todo-state-up . (org-autosort-get-todo . <))
-         				      (org-todo-state-down . (org-autosort-get-todo . >))
-         				      )
-       "Alist, defining how to sort entries.
-     The values in alist can be function or cons.
-     If the value is function, it should return the sorting key of the entry at point and should not require arguments.
-     If the value is cons, its car should be sorting key function or the list, and its cdr should be a function,
-     accepting at least two sorting keys and returning non nil if first key is lesser than second."
-       :type '(alist :key-type symbol :value-type (choise (function)
-         						 (cons function function)
-         						 ))
-       )
+      ;;; Code:
+    #+end_src
+*** DONE Custom variables
+    CLOSED: [2017-12-10 Sun 17:33]
+    :PROPERTIES:
+    :ID:       08e58824-f88a-4d3b-a79e-00a1514eb68a
+    :END:
+    :LOGBOOK:
+    CLOCK: [2017-12-10 Sun 17:13]--[2017-12-10 Sun 17:33] =>  0:20
+    CLOCK: [2017-12-10 Sun 11:03]--[2017-12-10 Sun 11:35] =>  0:32
+    CLOCK: [2017-12-10 Sun 11:02]--[2017-12-10 Sun 11:03] =>  0:01
+    :END:
+    #+begin_src emacs-lisp
+      (defgroup org-autosort nil
+	"Customization options of org-autosort package."
+	)
 
-     (defcustom org-autosort-default-cmp-function #'string<
-       "Default function, used to compare two entry keys.
-     It is used if cmp function for org-autosort-functions-alist is not defined.
-     It must accept two arguments - first and second sorting key to compare.  Non nil return value means that first key is lesser than second key."
-       :type '(function)
-       )
+      (defcustom org-autosort-sort-at-file-open t
+	"Non nil states for sorting of all items in the org file after opening."
+	:type '(boolean)
+	)
 
-     (defcustom org-autosort-global-sorting-strategy nil
-       "Sorting strategy, used to sort entries with :SORT: property not set or nil.
-     This is a symbol/function/cons or a list of symbols/functions/lists/cons.
-     If an element is a symbol, this symbol should be key from org-autosort-functions-alist.
-     If an element is a function, this function will be called at point with no arguments and return sorting key.  The keys will be compared using org-autosort-default-cmp-function.
-     If an element is a list, its first element should be sorting function and remaining elements will be supplied to the function during the call.
-     If an element is cons, its car should be a symbol/function/list, which defines sorting key function.  Its cdr should be a function/list, defining function to compare the keys.  This function must accept at least two arguments - first and second key to compare.  It should return non nil if the first key is lesser than second.
-     nil means that no sorting should be done by default."
-       :type '(choice
-   	    (choise (symbol)
-   		    (function)
-   		    (list function (repeat :inline t sexp)))
-   	    (repeat (choise (symbol)
-   			    (function)
-   			    (list function (repeat :inline t sexp))
-   			    (cons (list function (repeat :inline t sexp)) (list function (repeat :inline t sexp)))))
+      (defcustom org-autosort-sort-after-C-c-C-c t
+	"Non nil means sorting of a subtree at point after \org-ctrl-c-ctrl-c.
+      All the items are sorted if point is at the file header.
+      Sorting is recursive if org-autosort-sort-after-C-c-C-c-recursive is non nil."
+	:type '(boolean)
+	)
+
+      (defcustom org-autosort-sort-after-C-c-C-c-recursive nil
+	"If non nil, sort the subtrees recursively at a point after \org-ctrl-c-ctrl-c."
+	:type '(boolean)
+	)
+
+      (defcustom org-autosort-functions-alist '((org-todo-state-up . (org-autosort-get-todo . <))
+         				       (org-todo-state-down . (org-autosort-get-todo . >))
+         				       )
+	"Alist, defining how to sort entries.
+      The values in alist can be function or cons.
+      If the value is function, it should return the sorting key of the entry at point and should not require arguments.
+      If the value is cons, its car should be sorting key function or the list, and its cdr should be a function,
+      accepting at least two sorting keys and returning non nil if first key is lesser than second."
+	:type '(alist :key-type symbol :value-type (choise (function)
+         						  (cons function function)
+         						  ))
+	)
+
+      (defcustom org-autosort-default-cmp-function #'string<
+	"Default function, used to compare two entry keys.
+      It is used if cmp function for org-autosort-functions-alist is not defined.
+      It must accept two arguments - first and second sorting key to compare.  Non nil return value means that first key is lesser than second key."
+	:type '(function)
+	)
+
+      (defcustom org-autosort-global-sorting-strategy nil
+	"Sorting strategy, used to sort entries with :SORT: property not set or nil.
+      This is a symbol/function/cons or a list of symbols/functions/lists/cons.
+      If an element is a symbol, this symbol should be key from org-autosort-functions-alist.
+      If an element is a function, this function will be called at point with no arguments and return sorting key.  The keys will be compared using org-autosort-default-cmp-function.
+      If an element is a list, its first element should be sorting function and remaining elements will be supplied to the function during the call.
+      If an element is cons, its car should be a symbol/function/list, which defines sorting key function.  Its cdr should be a function/list, defining function to compare the keys.  This function must accept at least two arguments - first and second key to compare.  It should return non nil if the first key is lesser than second.
+      nil means that no sorting should be done by default."
+	:type '(choice
+   	     (choise (symbol)
+   		     (function)
+   		     (list function (repeat :inline t sexp)))
+   	     (repeat (choise (symbol)
+   			     (function)
+   			     (list function (repeat :inline t sexp))
+   			     (cons (list function (repeat :inline t sexp)) (list function (repeat :inline t sexp)))))
+   	     )
+	)
+    #+end_src
+*** NEXT Standard sorting functions
+    :PROPERTIES:
+    :ID:       c478d941-ddbf-49cc-b38c-a03c33779817
+    :END:
+    :LOGBOOK:
+    CLOCK: [2017-12-10 Sun 17:08]--[2017-12-10 Sun 17:13] =>  0:05
+    :END:
+**** DONE by property
+     CLOSED: [2017-12-10 Sun 17:34]
+     :PROPERTIES:
+     :ID:       51552471-6f2b-4792-a8a3-b4bb0d3618d8
+     :END:
+     #+begin_src emacs-lisp 
+       (defun org-autosort-get-property (property)
+	 "Get the value of PROPERTY for sorting."
+	 (org-entry-get (point) property 'selective)
+	 )
+     #+end_src
+**** DONE By todo keyword
+     CLOSED: [2017-12-10 Sun 17:34]
+     :PROPERTIES:
+     :ID:       0d4d78c1-a4a2-4091-8142-ea9e70434d73
+     :END:
+     #+begin_src emacs-lisp 
+       (defun org-autosort-get-todo ()
+	 "Get the value of todo keyword for sorting." ; stolen from org-sort-entries in org.el
+	 (let* ((m (org-get-todo-state))
+   	    (s (if (member m org-done-keywords) '- '+))
    	    )
-       )
-   #+end_src
-** NEXT Standard sorting functions
-   :PROPERTIES:
-   :ID:       c478d941-ddbf-49cc-b38c-a03c33779817
-   :END:
-   :LOGBOOK:
-   CLOCK: [2017-12-10 Sun 17:08]--[2017-12-10 Sun 17:13] =>  0:05
-   :END:
-*** DONE Property
-    CLOSED: [2017-12-10 Sun 17:34]
+           (- 99 (funcall s (length (member m org-todo-keywords-1))))
+           )
+	 )
+     #+end_src
+**** TODO Alphabetic
+**** TODO By first inactive timestamp
+**** TODO By deadline
+**** TODO By clocking time
+**** TODO Numerically, beginning of the entry/item
+**** TODO By Priority
+**** TODO By scheduled time/date
+**** TODO By active timestamp
+**** TODO By any timestamp
+*** DONE General sorting routine
+    CLOSED: [2017-12-10 Sun 17:36]
     :PROPERTIES:
-    :ID:       51552471-6f2b-4792-a8a3-b4bb0d3618d8
+    :ID:       7b077f97-a744-4197-9b4f-015af71ab95f
+    :END:
+    :LOGBOOK:
+    CLOCK: [2017-12-10 Sun 20:48]
+    CLOCK: [2017-12-10 Sun 16:24]--[2017-12-10 Sun 17:36] =>  1:12
+    CLOCK: [2017-12-10 Sun 16:05]--[2017-12-10 Sun 16:06] =>  0:01
+    CLOCK: [2017-12-10 Sun 14:17]--[2017-12-10 Sun 16:02] =>  1:45
+    CLOCK: [2017-12-10 Sun 11:35]--[2017-12-10 Sun 13:58] =>  2:23
+    :END:
+    #+begin_src emacs-lisp
+      (defun list-but-not-consp (arg)
+        "Return non nil if ARG is list and not cons."
+        (if (null arg)
+    	t
+          (when (listp arg)
+    	(list-but-not-consp (cdr arg))
+    	)
+          )
+        )
+
+      (defun org-autosort-sorting-strategy-elementp (elm)
+        "Validate element ELM of sorting strategy.  Return t if element and nil otherwise."
+        (pcase elm
+          ((pred (lambda (arg) (assoc arg org-autosort-functions-alist)))
+           t
+           )
+          ((pred functionp)
+           t
+           )
+          (`(quote val)
+           (org-autosort-sorting-strategy-elementp val)
+           )
+          (`(,keyfunc . ,cmpfunc)
+           (if (list-but-not-consp elm) ; not a cons cell
+    	   (org-autosort-sorting-strategy-elementp keyfunc)
+    	 (and (org-autosort-sorting-strategy-elementp keyfunc)
+    	    (org-autosort-sorting-strategy-elementp cmpfunc)
+    	    )
+    	 )
+           )
+          (_ nil)
+          )
+        )
+
+      (defun org-autosort-sorting-strategyp (sorting-strategy)
+        "Validate if SORTING-STRATEGY is a valid org-autosort-sorting-strategy and return ensure that it is a list.  Signal error if not."
+        (if (not sorting-strategy)
+    	t
+          (let* ((sorting-strategy (if (or (symbolp sorting-strategy) (functionp sorting-strategy) (not (list-but-not-consp sorting-strategy))) (list sorting-strategy) sorting-strategy))
+    	     (testresult (mapcar #'(lambda (elm) (cons (org-autosort-sorting-strategy-elementp elm) elm)) sorting-strategy))
+    	     (err-elm (alist-get nil testresult 'none)))
+    	(if (equal err-elm 'none)
+    	    sorting-strategy
+    	  (error "Wrong element of sorting strategy: \"%s\"", err-elm)
+    	  )
+    	)
+          )
+        )
+
+      (defun org-autosort-get-sorting-strategy ()
+        "Determine sorting strategy at the point."
+        (let ((property (org-entry-get (point) "SORT" 'selective)))
+          (if (seq-empty-p property)
+    	  (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy)
+    	(if (= (cdr (read-from-string property))
+                   (length property)
+                   )
+    	    (org-autosort-sorting-strategyp (car (read-from-string property)))
+    	  (error "Invalid value in :SORT: property: \"%s\"" property)
+    	  )
+    	)
+          )
+        )
+
+      (defun org-autosort-construct-get-value-function-atom (sorting-strategy-elm)
+        "Return result of get-value function for single element of sorting strategy (SORTING-STRATEGY-ELM)."
+        (pcase sorting-strategy-elm
+          ((app (lambda (arg) (assoc arg org-autosort-functions-alist)) `(_ . func) )
+           (org-autosort-construct-get-value-function-atom func)
+           )
+          ((pred functionp)
+           (funcall sorting-strategy-elm)
+           )
+          (`(quote val)
+           (org-autosort-sorting-strategy-elementp val)
+           )
+          (`(,keyfunc . ,cmpfunc)
+           (if (list-but-not-consp sorting-strategy-elm) ; not a cons cell
+    	   (apply keyfunc cmpfunc)
+    	 (org-autosort-construct-get-value-function-atom keyfunc)
+    	 )
+           )
+          )
+        )
+
+      (defun org-autosort-construct-get-value-function ()
+        "Return get-value function at point.
+      This function returns a list of sorting keys."
+        (let ((sorting-strategy (org-autosort-get-sorting-strategy)))
+          (if sorting-strategy
+    	  (mapcar #'org-autosort-construct-get-value-function-atom sorting-strategy)
+    	nil
+    	)
+          )
+        )
+
+      (defun org-autosort-construct-cmp-function-atom (sorting-strategy-elm a b)
+        "Return result of application of cmp function for single element of sorting strategy (SORTING-STRATEGY-ELM) called with A and B arguments."
+        (pcase sorting-strategy-elm
+          ((app (lambda (arg) (assoc arg org-autosort-functions-alist)) `(_ . func))
+           (org-autosort-construct-cmp-function-atom func a b)
+           )
+          ((pred functionp)
+           (funcall org-autosort-default-cmp-function a b)
+           )
+          (`(quote val)
+           (org-autosort-sorting-strategy-elementp val)
+           )
+          (`(,keyfunc . ,cmpfunc)
+           (if (list-but-not-consp sorting-strategy-elm) ; not a cons cell
+    	   (funcall org-autosort-default-cmp-function a b)
+    	 (if (listp cmpfunc)
+    	     (apply (car cmpfunc) a b (cdr cmpfunc))
+    	   (funcall cmpfunc a b)
+    	   )
+    	 )
+           )
+          )
+        )
+
+      (defun org-autosort-construct-cmp-function (lista listb)
+        "Return cmp at point."
+        (let ((sorting-strategy (org-autosort-get-sorting-strategy)))
+          (if (not sorting-strategy)
+    	  nil
+    	(let ((resultlist (seq-mapn #'(lambda (arg a b)
+    					(cons (org-autosort-construct-cmp-function-atom arg a b)
+    					      (org-autosort-construct-cmp-function-atom arg b a))) sorting-strategy lista listb)) ; list of cons (a<b . b<a)
+    	      (done nil)
+    	      result
+    	      )
+    	  (while (and (not done)
+    		    (not (seq-empty-p resultlist))
+    		    )
+    	    (let ((elem (pop resultlist)))
+    	      (when (not (and (car elem)
+    			  (cdr elem))) ; not equal
+    		(setq done t)
+    		(setq result (car elem))
+    		)
+    	      )
+    	    )
+    	  result
+    	  )
+    	)
+          )
+        )
+
+      (defun org-autosort-sort-entries-at-point-nonrecursive ()
+        "Sort org-entries at point nonrecursively.  Sort all entries _recursively_ if at the file header."
+        (funcall #'org-sort-entries nil ?f #'org-autosort-construct-get-value-function #'org-autosort-construct-cmp-function)
+        )
+
+      (defun org-autosort-sort-entries-at-point-recursive ()
+        "Sort org-entries at point recursively."
+        (condition-case err
+    	(org-map-entries #'(lambda nil (funcall #'org-sort-entries nil ?f #'org-autosort-construct-get-value-function #'org-autosort-construct-cmp-function)) nil 'tree)
+          (error
+           (if (string-match-p "Before first headline at position" (error-message-string err))
+    	   (org-map-entries #'(lambda nil (funcall #'org-sort-entries nil ?f #'org-autosort-construct-get-value-function #'org-autosort-construct-cmp-function)) nil 'file)
+    	 (signal (car err) (cdr err))
+    	 )
+           )
+          )
+        )
+
+      (defun org-autosort-sort-entries-at-point (&optional force)
+        "Sort org entries at point.  Respect value of org-autosort-sort-after-C-c-C-c if FORCE is non nil."
+        (when (or org-autosort-sort-after-C-c-C-c force)
+          (if org-autosort-sort-after-C-c-C-c-recursive
+    	  (org-autosort-sort-entries-at-point-recursive)
+    	(org-autosort-sort-entries-at-point-nonrecursive)
+    	)
+          )
+        )
+
+      (defun org-autosort-sort-entries-in-file (&optional force)
+        "Sort all entries in the file recursively.  Do not respect org-autosort-sort-at-file-open if FORCE is non nil."
+        (when (or org-autosort-sort-at-file-open force)
+          (org-map-entries #'(lambda nil (funcall #'org-sort-entries nil ?f #'org-autosort-construct-get-value-function #'org-autosort-construct-cmp-function)) nil 'file)
+          )
+        )
+
+      (add-hook org-load-hook #'org-autosort-sort-entries-in-file)
+      (add-hook org-ctrl-c-ctrl-c-hook #'org-autosort-sort-entries-at-point)
+    #+end_src
+*** DONE File epilogue
+    CLOSED: [2017-12-10 Sun 19:40]
+    :PROPERTIES:
+    :ID:       cf53b069-fcbb-45f9-9a80-e05f88d1fec5
     :END:
     #+begin_src emacs-lisp 
-      (defun org-autosort-get-property (property)
-	"Get the value of PROPERTY for sorting."
-	(org-entry-get (point) property 'selective)
-	)
+      (provide 'org-autosort)
+
+      ;;; org-autosort.el ends here
     #+end_src
-*** DONE =TODO= keyword
-    CLOSED: [2017-12-10 Sun 17:34]
-    :PROPERTIES:
-    :ID:       0d4d78c1-a4a2-4091-8142-ea9e70434d73
-    :END:
-    #+begin_src emacs-lisp 
-      (defun org-autosort-get-todo ()
-	"Get the value of todo keyword for sorting." ; stolen from org-sort-entries in org.el
-	(let* ((m (org-get-todo-state))
-   	   (s (if (member m org-done-keywords) '- '+))
-   	   )
-          (- 99 (funcall s (length (member m org-todo-keywords-1))))
-          )
-	)
-    #+end_src
-*** TODO Alphabetic
-*** TODO By first inactive timestamp
-*** TODO By deadline
-*** TODO By clocking time
-*** TODO Numerically, beginning of the entry/item
-*** TODO By Priority
-*** TODO By scheduled time/date
-*** TODO By active timestamp
-*** TODO By any timestamp
-** DONE General sorting routine
-   CLOSED: [2017-12-10 Sun 17:36]
-   :PROPERTIES:
-   :ID:       7b077f97-a744-4197-9b4f-015af71ab95f
-   :END:
-   :LOGBOOK:
-   CLOCK: [2017-12-10 Sun 16:24]--[2017-12-10 Sun 17:36] =>  1:12
-   CLOCK: [2017-12-10 Sun 16:05]--[2017-12-10 Sun 16:06] =>  0:01
-   CLOCK: [2017-12-10 Sun 14:17]--[2017-12-10 Sun 16:02] =>  1:45
-   CLOCK: [2017-12-10 Sun 11:35]--[2017-12-10 Sun 13:58] =>  2:23
-   :END:
-   #+begin_src emacs-lisp
-     (defun list-but-not-consp (arg)
-       "Return non nil if ARG is list and not cons."
-       (if (null arg)
-        t
-         (when (listp arg)
-        (list-but-not-consp (cdr arg))
-        )
-         )
-       )
-
-     (defun org-autosort-sorting-strategy-elementp (elm)
-       "Validate element ELM of sorting strategy.  Return t if element and nil otherwise."
-       (pcase elm
-         ((pred (lambda (arg) (assoc arg org-autosort-functions-alist)))
-          t
-          )
-         ((pred functionp)
-          t
-          )
-         (`(quote val)
-          (org-autosort-sorting-strategy-elementp val)
-          )
-         (`(,keyfunc . ,cmpfunc)
-          (if (list-but-not-consp elm) ; not a cons cell
-        (org-autosort-sorting-strategy-elementp keyfunc)
-         (and (org-autosort-sorting-strategy-elementp keyfunc)
-         (org-autosort-sorting-strategy-elementp cmpfunc)
-         )
-         )
-          )
-         (_ nil)
-         )
-       )
-
-     (defun org-autosort-sorting-strategyp (sorting-strategy)
-       "Validate if SORTING-STRATEGY is a valid org-autosort-sorting-strategy and return ensure that it is a list.  Signal error if not."
-       (when (not sorting-strategy)
-         (error "Empty sorting strategy")
-         )
-       (let* ((sorting-strategy (if (or (symbolp sorting-strategy) (functionp sorting-strategy) (not (list-but-not-consp sorting-strategy))) (list sorting-strategy) sorting-strategy))
-        (testresult (mapcar #'(lambda (elm) (cons (org-autosort-sorting-strategy-elementp elm) elm)) sorting-strategy))
-        (err-elm (alist-get nil testresult 'none)))
-         (if (equal err-elm 'none)
-          sorting-strategy
-        (error "Wrong element of sorting strategy: \"%s\"", err-elm)
-        )
-         )
-       )
-
-     (defun org-autosort-get-sorting-strategy ()
-       "Determine sorting strategy at the point."
-       (let ((property (org-entry-get (point) "SORT" 'selective)))
-         (if (seq-empty-p property)
-          (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy)
-        (if (= (cdr (read-from-string property))
-                  (length property)
-                  )
-          (org-autosort-sorting-strategyp (car (read-from-string property)))
-          (error "Invalid value in :SORT: property: \"%s\"" property)
-          )
-        )
-         )
-       )
-
-     (defun org-autosort-construct-get-value-function-atom (sorting-strategy-elm)
-       "Return result of get-value function for single element of sorting strategy (SORTING-STRATEGY-ELM)."
-       (pcase sorting-strategy-elm
-         ((app (lambda (arg) (assoc arg org-autosort-functions-alist)) `(_ . func) )
-          (org-autosort-construct-get-value-function-atom func)
-          )
-         ((pred functionp)
-          (funcall sorting-strategy-elm)
-          )
-         (`(quote val)
-          (org-autosort-sorting-strategy-elementp val)
-          )
-         (`(,keyfunc . ,cmpfunc)
-          (if (list-but-not-consp sorting-strategy-elm) ; not a cons cell
-        (apply keyfunc cmpfunc)
-         (org-autosort-construct-get-value-function-atom keyfunc)
-         )
-          )
-         )
-       )
-
-     (defun org-autosort-construct-get-value-function ()
-       "Return get-value function at point.
-     This function returns a list of sorting keys."
-       (let ((sorting-strategy (org-autosort-get-sorting-strategy)))
-         (mapcar #'org-autosort-construct-get-value-function-atom sorting-strategy)
-         )
-       )
-
-     (defun org-autosort-construct-cmp-function-atom (sorting-strategy-elm a b)
-       "Return result of application of cmp function for single element of sorting strategy (SORTING-STRATEGY-ELM) called with A and B arguments."
-       (pcase sorting-strategy-elm
-         ((app (lambda (arg) (assoc arg org-autosort-functions-alist)) `(_ . func))
-          (org-autosort-construct-cmp-function-atom func a b)
-          )
-         ((pred functionp)
-          (funcall org-autosort-default-cmp-function a b)
-          )
-         (`(quote val)
-          (org-autosort-sorting-strategy-elementp val)
-          )
-         (`(,keyfunc . ,cmpfunc)
-          (if (list-but-not-consp sorting-strategy-elm) ; not a cons cell
-        (funcall org-autosort-default-cmp-function a b)
-         (if (listp cmpfunc)
-          (apply (car cmpfunc) a b (cdr cmpfunc))
-        (funcall cmpfunc a b)
-        )
-         )
-          )
-         )
-       )
-
-     (defun org-autosort-construct-cmp-function (lista listb)
-       "Return cmp at point."
-       (let ((sorting-strategy (org-autosort-get-sorting-strategy)))
-         (let ((resultlist (seq-mapn #'(lambda (arg a b)
-      				   (cons (org-autosort-construct-cmp-function-atom arg a b)
-      					 (org-autosort-construct-cmp-function-atom arg b a))) sorting-strategy lista listb)) ; list of cons (a<b . b<a)
-   	 (done nil)
-   	 result
-   	 )
-        (while (and (not done)
-      	       (not (seq-empty-p resultlist))
-      	       )
-          (let ((elem (pop resultlist)))
-   	 (when (not (and (car elem)
-      		     (cdr elem))) ; not equal
-      	   (setq done t)
-      	   (setq result (car elem))
-      	   )
-   	 )
-          )
-        result
-        )
-         )
-       )
-
-     (defun org-autosort-sort-entries-at-point-nonrecursive ()
-       "Sort org-entries at point nonrecursively.  Sort all entries _recursively_ if at the file header."
-       (funcall #'org-sort-entries nil ?f #'org-autosort-construct-get-value-function #'org-autosort-construct-cmp-function)
-       )
-
-     (defun org-autosort-sort-entries-at-point-recursive ()
-       "Sort org-entries at point recursively."
-       (condition-case err
-        (org-map-entries #'(lambda nil (funcall #'org-sort-entries nil ?f #'org-autosort-construct-get-value-function #'org-autosort-construct-cmp-function)) nil 'tree)
-         (error
-          (if (string-match-p "Before first headline at position" (error-message-string err))
-        (org-map-entries #'(lambda nil (funcall #'org-sort-entries nil ?f #'org-autosort-construct-get-value-function #'org-autosort-construct-cmp-function)) nil 'file)
-         (signal (car err) (cdr err))
-         )
-          )
-         )
-       )
-
-     (defun org-autosort-sort-entries-at-point (&optional force)
-       "Sort org entries at point.  Respect value of org-autosort-sort-after-C-c-C-c if FORCE is non nil."
-       (when (or org-autosort-sort-after-C-c-C-c force)
-         (if org-autosort-sort-after-C-c-C-c-recursive
-          (org-autosort-sort-entries-at-point-recursive)
-        (org-autosort-sort-entries-at-point-nonrecursive)
-        )
-         )
-       )
-
-     (defun org-autosort-sort-entries-in-file (&optional force)
-       "Sort all entries in the file recursively.  Do not respect org-autosort-sort-at-file-open if FORCE is non nil."
-       (when (or org-autosort-sort-at-file-open force)
-         (org-map-entries #'(lambda nil (funcall #'org-sort-entries nil ?f #'org-autosort-construct-get-value-function #'org-autosort-construct-cmp-function)) nil 'file)
-         )
-       )
-
-     (add-hook org-load-hook #'org-autosort-sort-entries-in-file)
-     (add-hook org-ctrl-c-ctrl-c-hook #'org-autosort-sort-entries-at-point)
-   #+end_src
-** DONE File epilogue
-   CLOSED: [2017-12-10 Sun 19:40]
-   :PROPERTIES:
-   :ID:       cf53b069-fcbb-45f9-9a80-e05f88d1fec5
-   :END:
-   #+begin_src emacs-lisp 
-     (provide 'org-autosort)
-
-     ;;; org-autosort.el ends here
-   #+end_src
-* TODO Ideas                                                     :NOEXPORT:SKIP:
-** TODO Sort items when opening org file, on edit??
-** TODO do not use org-sort, because it does not allow to combine sorts (i.e. sort by one criteria, if equal - by other)
-** TODO allow to define sort criteria like a lisp function in the properties field
-** TODO Do not sort only but filter items in org files/agenda
-** TODO Take care about exact position for =C-c C-c= (say, we are inside the table - user may not want to sort)
-** TODO Sort only items, matching org search regex
+** TODO Ideas                                                 :NOEXPORT:SKIP:
+*** TODO Sort items when opening org file, on edit??
+*** TODO do not use org-sort, because it does not allow to combine sorts (i.e. sort by one criteria, if equal - by other)
+*** TODO allow to define sort criteria like a lisp function in the properties field
+*** TODO Do not sort only but filter items in org files/agenda
+*** TODO Take care about exact position for =C-c C-c= (say, we are inside the table - user may not want to sort)
+*** TODO Sort only items, matching org search regex
