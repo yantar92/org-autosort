@@ -93,7 +93,7 @@
          						 ))
        )
 
-     (defcustom org-autosort-default-cmp-function #'<
+     (defcustom org-autosort-default-cmp-function #'string<
        "Default function, used to compare two entry keys.
      It is used if cmp function for org-autosort-functions-alist is not defined.
      It must accept two arguments - first and second sorting key to compare.  Non nil return value means that first key is lesser than second key."
@@ -363,7 +363,7 @@
 
      ;;; org-autosort.el ends here
    #+end_src
-* TODO Ideas                                                           :SKIP:
+* TODO Ideas                                                     :NOEXPORT:SKIP:
 ** TODO Sort items when opening org file, on edit??
 ** TODO do not use org-sort, because it does not allow to combine sorts (i.e. sort by one criteria, if equal - by other)
 ** TODO allow to define sort criteria like a lisp function in the properties field
