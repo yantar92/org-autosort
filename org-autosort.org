@@ -7,7 +7,7 @@
 
 * TODO Automatic sorting of items in org mode
 ** Motivation
-   For now, standard org capabilities allow to sort entries in the agenda views automatically. However, sorting of the actual org files is rather limited. We only have =org=sort= function, which allows to sort by one criteria only (not like =org-agenda-sorting-strategy= with multiple sort criteria). Moreover, it can be done manually only. 
+   For now, standard org capabilities allow to sort entries in the agenda views automatically. However, sorting of the actual org files is rather limited. We only have =org-sort= function, which allows to sort by one criteria only (not like =org-agenda-sorting-strategy= with multiple sort criteria). Moreover, it can be done manually only. 
 
    Sometimes, one may have a need to look at some kind of long list of TODO items (for example, this infinitely growing list of things you wish to do one day, or list of ideas). It is not comfortable to scroll across such kind of list to look for specific item. Sorting is something, that can help here. 
 
