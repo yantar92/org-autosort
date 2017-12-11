@@ -181,7 +181,7 @@
     :ID:       7b077f97-a744-4197-9b4f-015af71ab95f
     :END:
     :LOGBOOK:
-    CLOCK: [2017-12-10 Sun 20:48]
+    CLOCK: [2017-12-10 Sun 20:48]--[2017-12-10 Sun 22:40] =>  1:52
     CLOCK: [2017-12-10 Sun 16:24]--[2017-12-10 Sun 17:36] =>  1:12
     CLOCK: [2017-12-10 Sun 16:05]--[2017-12-10 Sun 16:06] =>  0:01
     CLOCK: [2017-12-10 Sun 14:17]--[2017-12-10 Sun 16:02] =>  1:45
@@ -189,208 +189,208 @@
     :END:
     #+begin_src emacs-lisp
       (defun list-but-not-consp (arg)
-        "Return non nil if ARG is list and not cons."
-        (if (null arg)
-        t
-          (when (listp arg)
-        (list-but-not-consp (cdr arg)))))
+	"Return non nil if ARG is list and not cons."
+	(if (null arg)
+	t
+	  (when (listp arg)
+	(list-but-not-consp (cdr arg)))))
 
       (defun org-autosort-sorting-strategy-elementp (elm)
-        "Validate element ELM of sorting strategy.  Return t if element and nil otherwise."
-        (pcase elm
-          ((pred (lambda (arg) (assoc arg
-        			 org-autosort-functions-alist)))
-           t
-           )
-          ((pred functionp)
-           t
-           )
-          (`(quote val)
-           (org-autosort-sorting-strategy-elementp val)
-           )
-          (`(,keyfunc . ,cmpfunc)
-           (if (list-but-not-consp elm) ; not a cons cell
-           (org-autosort-sorting-strategy-elementp keyfunc)
-         (and (org-autosort-sorting-strategy-elementp keyfunc)
-    	(org-autosort-sorting-strategy-elementp cmpfunc)
-    	)))
-          (_ nil)))
+	"Validate element ELM of sorting strategy.  Return t if element and nil otherwise."
+	(pcase elm
+	  ((pred (lambda (arg) (assoc arg
+				 org-autosort-functions-alist)))
+	   t
+	   )
+	  ((pred functionp)
+	   t
+	   )
+	  (`(quote val)
+	   (org-autosort-sorting-strategy-elementp val)
+	   )
+	  (`(,keyfunc . ,cmpfunc)
+	   (if (list-but-not-consp elm) ; not a cons cell
+	   (org-autosort-sorting-strategy-elementp keyfunc)
+	 (and (org-autosort-sorting-strategy-elementp keyfunc)
+	(org-autosort-sorting-strategy-elementp cmpfunc)
+	)))
+	  (_ nil)))
 
       (defun org-autosort-sorting-strategyp (sorting-strategy)
-        "Validate if SORTING-STRATEGY is a valid org-autosort-sorting-strategy and return ensure that it is a list.  Signal error if not."
-        (if (not sorting-strategy)
-        t
-          (let* ((sorting-strategy (if (or (symbolp sorting-strategy)
-        				  (functionp sorting-strategy)
-        				  (not (list-but-not-consp sorting-strategy)))
-        			       (list sorting-strategy)
-        			     sorting-strategy))
-    	 (testresult (mapcar (lambda (elm) (cons (org-autosort-sorting-strategy-elementp elm)
-        					      elm))
-        			     sorting-strategy))
-    	 (err-elm (alist-get nil
-        			     testresult
-        			     'none)))
-        (if (equal err-elm 'none)
-    	sorting-strategy
-          (error "Wrong element of sorting strategy: \"%s\""
-        	     err-elm)))))
+	"Validate if SORTING-STRATEGY is a valid org-autosort-sorting-strategy and return ensure that it is a list.  Signal error if not."
+	(if (not sorting-strategy)
+	t
+	  (let* ((sorting-strategy (if (or (symbolp sorting-strategy)
+					  (functionp sorting-strategy)
+					  (not (list-but-not-consp sorting-strategy)))
+				       (list sorting-strategy)
+				     sorting-strategy))
+	 (testresult (mapcar (lambda (elm) (cons (org-autosort-sorting-strategy-elementp elm)
+						      elm))
+				     sorting-strategy))
+	 (err-elm (alist-get nil
+				     testresult
+				     'none)))
+	(if (equal err-elm 'none)
+	sorting-strategy
+	  (error "Wrong element of sorting strategy: \"%s\""
+		     err-elm)))))
 
       (defun org-autosort-get-sorting-strategy ()
-        "Determine sorting strategy at the point."
-        (let ((property (org-entry-get (point)
-        			       "SORT"
-        			       'selective)))
-          (if (seq-empty-p property)
-          (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy)
-        (if (= (cdr (read-from-string property))
-                   (length property))
-    	(org-autosort-sorting-strategyp (car (read-from-string property)))
-          (error "Invalid value in :SORT: property: \"%s\"" property)
-          ))))
+	"Determine sorting strategy at the point."
+	(let ((property (org-entry-get (point)
+				       "SORT"
+				       'selective)))
+	  (if (seq-empty-p property)
+	  (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy)
+	(if (= (cdr (read-from-string property))
+		   (length property))
+	(org-autosort-sorting-strategyp (car (read-from-string property)))
+	  (error "Invalid value in :SORT: property: \"%s\"" property)
+	  ))))
 
       (defun org-autosort-construct-get-value-function-atom (sorting-strategy-elm)
-        "Return result of get-value function for single element of sorting strategy (SORTING-STRATEGY-ELM)."
-        (pcase sorting-strategy-elm
-          ((app (lambda (arg) (assoc arg
-        			org-autosort-functions-alist))
-    	`(_ . func) )
-           (org-autosort-construct-get-value-function-atom func))
-          ((pred functionp)
-           (funcall sorting-strategy-elm))
-          (`(quote val)
-           (org-autosort-sorting-strategy-elementp val))
-          (`(,keyfunc . ,cmpfunc)
-           (if (list-but-not-consp sorting-strategy-elm) ; not a cons cell
-           (apply keyfunc
-        	      cmpfunc)
-         (org-autosort-construct-get-value-function-atom keyfunc)
-         ))))
+	"Return result of get-value function for single element of sorting strategy (SORTING-STRATEGY-ELM)."
+	(pcase sorting-strategy-elm
+	  ((app (lambda (arg) (assoc arg
+				org-autosort-functions-alist))
+	`(_ . func) )
+	   (org-autosort-construct-get-value-function-atom func))
+	  ((pred functionp)
+	   (funcall sorting-strategy-elm))
+	  (`(quote val)
+	   (org-autosort-sorting-strategy-elementp val))
+	  (`(,keyfunc . ,cmpfunc)
+	   (if (list-but-not-consp sorting-strategy-elm) ; not a cons cell
+	   (apply keyfunc
+		      cmpfunc)
+	 (org-autosort-construct-get-value-function-atom keyfunc)
+	 ))))
 
       (defun org-autosort-construct-get-value-function ()
-        "Return get-value function at point.
+	"Return get-value function at point.
       This function returns a list of sorting keys."
-        (let ((sorting-strategy (org-autosort-get-sorting-strategy)))
-          (if sorting-strategy
-          (mapcar #'org-autosort-construct-get-value-function-atom
-        	      sorting-strategy)
-        nil
-        )))
+	(let ((sorting-strategy (org-autosort-get-sorting-strategy)))
+	  (if sorting-strategy
+	  (mapcar #'org-autosort-construct-get-value-function-atom
+		      sorting-strategy)
+	nil
+	)))
 
       (defun org-autosort-construct-cmp-function-atom (sorting-strategy-elm a b)
-        "Return result of application of cmp function for single element of sorting strategy (SORTING-STRATEGY-ELM) called with A and B arguments."
-        (pcase sorting-strategy-elm
-          ((app (lambda (arg) (assoc arg
-        			org-autosort-functions-alist))
-    	`(_ . func))
-           (org-autosort-construct-cmp-function-atom func
-        					     a
-        					     b))
-          ((pred functionp)
-           (funcall org-autosort-default-cmp-function
-        	    a
-        	    b))
-          (`(quote val)
-           (org-autosort-sorting-strategy-elementp val))
-          (`(,keyfunc . ,cmpfunc)
-           (if (list-but-not-consp sorting-strategy-elm) ; not a cons cell
-           (funcall org-autosort-default-cmp-function
-        		a
-        		b)
-         (if (listp cmpfunc)
-    	 (apply (car cmpfunc)
-        		a
-        		b
-        		(cdr cmpfunc))
-           (funcall cmpfunc
-        		a
-        		b))))))
+	"Return result of application of cmp function for single element of sorting strategy (SORTING-STRATEGY-ELM) called with A and B arguments."
+	(pcase sorting-strategy-elm
+	  ((app (lambda (arg) (assoc arg
+				org-autosort-functions-alist))
+	`(_ . func))
+	   (org-autosort-construct-cmp-function-atom func
+						     a
+						     b))
+	  ((pred functionp)
+	   (funcall org-autosort-default-cmp-function
+		    a
+		    b))
+	  (`(quote val)
+	   (org-autosort-sorting-strategy-elementp val))
+	  (`(,keyfunc . ,cmpfunc)
+	   (if (list-but-not-consp sorting-strategy-elm) ; not a cons cell
+	   (funcall org-autosort-default-cmp-function
+			a
+			b)
+	 (if (listp cmpfunc)
+	 (apply (car cmpfunc)
+			a
+			b
+			(cdr cmpfunc))
+	   (funcall cmpfunc
+			a
+			b))))))
 
       (defun org-autosort-construct-cmp-function (lista listb)
-        "Return cmp at point."
-        (let ((sorting-strategy (org-autosort-get-sorting-strategy)))
-          (if (not sorting-strategy)
-    	  nil
-    	(let ((resultlist (seq-mapn (lambda (arg a b)
-    					(cons (org-autosort-construct-cmp-function-atom arg
-    											a
-    											b)
-    					      (org-autosort-construct-cmp-function-atom arg
-    											b
-    											a)))
-    				    sorting-strategy
-    				    lista
-    				    listb)) ; list of cons (a<b . b<a)
-    	      (done nil)
-    	      result
-    	      )
-    	  (while (and (not done)
-    		    (not (seq-empty-p resultlist))
-    		    )
-    	    (let ((elem (pop resultlist)))
-    	      (unless (and (car elem)
-    			 (cdr elem)) ; not equal
-    		(setq done t)
-    		(setq result (car elem)))))
-    	  result
-    	  ))))
+	"Return cmp at point."
+	(let ((sorting-strategy (org-autosort-get-sorting-strategy)))
+	  (if (not sorting-strategy)
+	  nil
+	(let ((resultlist (seq-mapn (lambda (arg a b)
+					(cons (org-autosort-construct-cmp-function-atom arg
+											a
+											b)
+					      (org-autosort-construct-cmp-function-atom arg
+											b
+											a)))
+				    sorting-strategy
+				    lista
+				    listb)) ; list of cons (a<b . b<a)
+	      (done nil)
+	      result
+	      )
+	  (while (and (not done)
+		    (not (seq-empty-p resultlist))
+		    )
+	    (let ((elem (pop resultlist)))
+	      (unless (and (car elem)
+			 (cdr elem)) ; not equal
+		(setq done t)
+		(setq result (car elem)))))
+	  result
+	  ))))
 
       (defun org-autosort-sort-entries-at-point-nonrecursive ()
-        "Sort org-entries at point nonrecursively.  Sort all entries _recursively_ if at the file header."
-        (funcall #'org-sort-entries
-    	 nil
-    	 ?f
-    	 #'org-autosort-construct-get-value-function
-    	 #'org-autosort-construct-cmp-function))
+	"Sort org-entries at point nonrecursively.  Sort all entries _recursively_ if at the file header."
+	(funcall #'org-sort-entries
+	 nil
+	 ?f
+	 #'org-autosort-construct-get-value-function
+	 #'org-autosort-construct-cmp-function))
 
       (defun org-autosort-sort-entries-at-point-recursive ()
-        "Sort org-entries at point recursively."
-        (condition-case err
-        (org-map-entries (lambda nil (funcall #'org-sort-entries
-        				     nil
-        				     ?f
-        				     #'org-autosort-construct-get-value-function
-        				     #'org-autosort-construct-cmp-function))
-        		     nil
-        		     'tree)
-          (error
-           (if (string-match-p "Before first headline at position"
-        		       (error-message-string err))
-           (org-map-entries (lambda nil (funcall #'org-sort-entries
-        					nil
-        					?f
-        					#'org-autosort-construct-get-value-function
-        					#'org-autosort-construct-cmp-function))
-        			nil
-        			'file)
-         (signal (car err)
-        	     (cdr err))
-         ))))
+	"Sort org-entries at point recursively."
+	(condition-case err
+	(org-map-entries (lambda nil (funcall #'org-sort-entries
+					     nil
+					     ?f
+					     #'org-autosort-construct-get-value-function
+					     #'org-autosort-construct-cmp-function))
+			     nil
+			     'tree)
+	  (error
+	   (if (string-match-p "Before first headline at position"
+			       (error-message-string err))
+	   (org-map-entries (lambda nil (funcall #'org-sort-entries
+						nil
+						?f
+						#'org-autosort-construct-get-value-function
+						#'org-autosort-construct-cmp-function))
+				nil
+				'file)
+	 (signal (car err)
+		     (cdr err))
+	 ))))
 
       (defun org-autosort-sort-entries-at-point (&optional force)
-        "Sort org entries at point.  Respect value of org-autosort-sort-after-C-c-C-c if FORCE is non nil."
-        (when (or org-autosort-sort-after-C-c-C-c force)
-          (if org-autosort-sort-after-C-c-C-c-recursive
-          (org-autosort-sort-entries-at-point-recursive)
-        (org-autosort-sort-entries-at-point-nonrecursive)
-        )))
+	"Sort org entries at point.  Respect value of org-autosort-sort-after-C-c-C-c if FORCE is non nil."
+	(when (or org-autosort-sort-after-C-c-C-c force)
+	  (if org-autosort-sort-after-C-c-C-c-recursive
+	  (org-autosort-sort-entries-at-point-recursive)
+	(org-autosort-sort-entries-at-point-nonrecursive)
+	)))
 
       (defun org-autosort-sort-entries-in-file (&optional force)
-        "Sort all entries in the file recursively.  Do not respect org-autosort-sort-at-file-open if FORCE is non nil."
-        (when (or org-autosort-sort-at-file-open force)
-          (org-map-entries (lambda nil (funcall #'org-sort-entries
-        				   nil
-        				   ?f
-        				   #'org-autosort-construct-get-value-function
-        				   #'org-autosort-construct-cmp-function))
-        		   nil
-        		   'file)))
+	"Sort all entries in the file recursively.  Do not respect org-autosort-sort-at-file-open if FORCE is non nil."
+	(when (or org-autosort-sort-at-file-open force)
+	  (org-map-entries (lambda nil (funcall #'org-sort-entries
+					   nil
+					   ?f
+					   #'org-autosort-construct-get-value-function
+					   #'org-autosort-construct-cmp-function))
+			   nil
+			   'file)))
 
-      (add-hook org-load-hook
-    	#'org-autosort-sort-entries-in-file)
+      (add-hook 'org-load-hook
+		#'org-autosort-sort-entries-in-file)
 
-      (add-hook org-ctrl-c-ctrl-c-hook
-    	#'org-autosort-sort-entries-at-point)
+      (add-hook 'org-ctrl-c-ctrl-c-hook
+		#'org-autosort-sort-entries-at-point)
     #+end_src
 *** DONE File epilogue
     CLOSED: [2017-12-10 Sun 19:40]
@@ -398,7 +398,7 @@
     :ID:       cf53b069-fcbb-45f9-9a80-e05f88d1fec5
     :END:
     #+begin_src emacs-lisp 
-      (provide 'org-autosort)
+    (provide 'org-autosort)
 
       ;;; org-autosort.el ends here
     #+end_src
