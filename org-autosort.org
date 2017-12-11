@@ -240,7 +240,7 @@
         "Determine sorting strategy at the point."
         (let ((property (org-entry-get (point)
         			       "SORT"
-        			       'selective)))
+        			       'USE-INHERITANCE)))
           (if (seq-empty-p property)
           (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy)
         (if (= (cdr (read-from-string property))
