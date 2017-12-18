@@ -2,11 +2,11 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org7992572">1. <span class="todo TODO">TODO</span> Automatic sorting of items in org mode</a>
+<li><a href="#org3c37e91">1. <span class="todo TODO">TODO</span> Automatic sorting of items in org mode&#xa0;&#xa0;&#xa0;<span class="tag"><span class="ORGMODE">ORGMODE</span>&#xa0;<span class="EMACS">EMACS</span>&#xa0;<span class="COMMON">COMMON</span></span></a>
 <ul>
-<li><a href="#org08d5829">1.1. Motivation</a></li>
-<li><a href="#org2d1c1c6">1.2. Overview</a></li>
-<li><a href="#org6d86878">1.3. Configuration</a></li>
+<li><a href="#orgda93de2">1.1. Motivation</a></li>
+<li><a href="#org1ba57c8">1.2. Overview</a></li>
+<li><a href="#org1fba101">1.3. Configuration</a></li>
 </ul>
 </li>
 </ul>
@@ -14,12 +14,12 @@
 </div>
 
 
-<a id="org7992572"></a>
+<a id="org3c37e91"></a>
 
-# Automatic sorting of items in org mode
+# Automatic sorting of items in org mode     :ORGMODE:EMACS:COMMON:
 
 
-<a id="org08d5829"></a>
+<a id="orgda93de2"></a>
 
 ## Motivation
 
@@ -32,7 +32,7 @@ Of course, you can still you `org-sort` or agenda view with restriction to the c
 The solution is to implement automatic sorting of subtrees in org files. 
 
 
-<a id="org2d1c1c6"></a>
+<a id="org1ba57c8"></a>
 
 ## Overview
 
@@ -41,7 +41,7 @@ This package aims to implement an automatic sorting of the subtrees in org files
 Everything, except global sorting order, can be set using standard inheritance capabilities of the org properties (file local, subtree local with or without inheritance for subtrees inside the subtree). Global sorting order can be set via `org-autosort-global-sorting-strategy` variable.
 
 
-<a id="org6d86878"></a>
+<a id="org1fba101"></a>
 
 ## Configuration
 
