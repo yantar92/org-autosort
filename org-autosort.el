@@ -37,15 +37,18 @@ Sorting is recursive if org-autosort-sort-after-C-c-C-c-recursive is non nil."
 
 (defcustom org-autosort-functions-alist '((org-todo-state-up . (org-autosort-get-todo . <))
     				      (org-todo-state-down . (org-autosort-get-todo . >))
-    				      )
+    				      (org-todo-state-custom-up . (org-get-todo-state . org-autosort-custom-cmp-todo))
+    				      (org-todo-state-custom-down . (org-get-todo-state . #'(lambda (a b)
+    											      (not (org-autosort-custom-cmp-todo a b)))))
+    				      (org-text-up . (org-autosort-get-text . #'string<))
+    				      (org-text-down . (org-autosort-get-text . #'string>)))
   "Alist, defining how to sort entries.
 The values in alist can be function or cons.
 If the value is function, it should return the sorting key of the entry at point and should not require arguments.
 If the value is cons, its car should be sorting key function or the list, and its cdr should be a function,
 accepting at least two sorting keys and returning non nil if first key is lesser than second."
   :type '(alist :key-type symbol :value-type (choise (function)
-    						 (cons function function)
-    						 )))
+    						 (cons function function))))
 
 (defcustom org-autosort-default-cmp-function #'string<
   "Default function, used to compare two entry keys.
@@ -62,18 +65,18 @@ If an element is a list, its first element should be sorting function and remain
 If an element is cons, its car should be a symbol/function/list, which defines sorting key function.  Its cdr should be a function/list, defining function to compare the keys.  This function must accept at least two arguments - first and second key to compare.  It should return non nil if the first key is lesser than second.
 nil means that no sorting should be done by default."
   :type '(choice
-      (choise (symbol)
-    	      (function)
-    	      (list function
-    		    (repeat :inline t sexp)))
-      (repeat (choise (symbol)
-    		      (function)
-    		      (list function
-    			    (repeat :inline t sexp))
-    		      (cons (list function
-    				  (repeat :inline t sexp))
-    			    (list function
-    				  (repeat :inline t sexp)))))))
+  (choise (symbol)
+              (function)
+              (list function
+                            (repeat :inline t sexp)))
+  (repeat (choise (symbol)
+        		      (function)
+        		      (list function
+                                    (repeat :inline t sexp))
+        		      (cons (list function
+                                	  (repeat :inline t sexp))
+                                    (list function
+                                	  (repeat :inline t sexp)))))))
 
 (defun org-autosort-get-property (property)
   "Get the value of PROPERTY for sorting."
@@ -92,6 +95,27 @@ nil means that no sorting should be done by default."
      	   (length (member m
      			   org-todo-keywords-1))))))
 
+(defvar org-autosort-todo-cmp-order nil
+  "Order of todo keywords to be shown in sorted subtrees.
+Follow `org-todo-keywords-1' if nil."
+  )
+(defun org-autosort-custom-cmp-todo (a b)
+  "Compare todo keywords A and B.  Return non nil if A<B."
+  (let* ((todo-cmp-orgder (or org-autosort-todo-cmp-order
+     			org-todo-keywords-1))
+    (posa (or (seq-position org-autosort-todo-cmp-order
+     			   a)
+     	     0))
+    (posb (or (seq-position org-autosort-todo-cmp-order
+     			   b)
+     	     0)))
+    (< posa posb)))
+
+(defun org-autosort-get-text ()
+  "Get the text or tags (if text is empty) of the current entry."
+  (nth 4 (org-heading-components))
+  )
+
 (defun list-but-not-consp (arg)
   "Return non nil if ARG is list and not cons."
   (if (null arg)
@@ -103,7 +127,7 @@ nil means that no sorting should be done by default."
   "Validate element ELM of sorting strategy.  Return t if element and nil otherwise."
   (pcase elm
     ((pred (lambda (arg) (assoc arg
-            	       org-autosort-functions-alist)))
+    		       org-autosort-functions-alist)))
      t
      )
     ((pred functionp)
@@ -116,8 +140,8 @@ nil means that no sorting should be done by default."
      (if (list-but-not-consp elm) ; not a cons cell
      (org-autosort-sorting-strategy-elementp keyfunc)
    (and (org-autosort-sorting-strategy-elementp keyfunc)
-  (org-autosort-sorting-strategy-elementp cmpfunc)
-  )))
+      (org-autosort-sorting-strategy-elementp cmpfunc)
+      )))
     (_ nil)))
 
 (defun org-autosort-sorting-strategyp (sorting-strategy)
@@ -125,18 +149,18 @@ nil means that no sorting should be done by default."
   (if (not sorting-strategy)
   nil
     (let* ((sorting-strategy (if (or (symbolp sorting-strategy)
-            			(functionp sorting-strategy)
-            			(not (list-but-not-consp sorting-strategy)))
-            		     (list sorting-strategy)
-            		   sorting-strategy))
-   (testresult (mapcar (lambda (elm) (cons (org-autosort-sorting-strategy-elementp elm)
-            				  elm))
-            		   sorting-strategy))
-   (err-elm (alist-get nil
-            		   testresult
-            		   'none)))
+    				(functionp sorting-strategy)
+    				(not (list-but-not-consp sorting-strategy)))
+    			     (list sorting-strategy)
+    			   sorting-strategy))
+       (testresult (mapcar (lambda (elm) (cons (org-autosort-sorting-strategy-elementp elm)
+    					  elm))
+    			   sorting-strategy))
+       (err-elm (alist-get nil
+    			   testresult
+    			   'none)))
   (if (equal err-elm 'none)
-  sorting-strategy
+      sorting-strategy
     (error "Wrong element of sorting strategy: \"%s\""
     	   err-elm)))))
 
@@ -146,13 +170,13 @@ When ATPARENT is non nil, sorting is assumed to be for children of the entry at 
   (let ((property (save-excursion
                     (unless atparent (org-up-heading-safe))
                     (org-entry-get (point)
-                    	       "SORT"
-                    	       'selective))))
+    			       "SORT"
+    			       'selective))))
     (if (seq-empty-p property)
     (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy)
   (if (= (cdr (read-from-string property))
              (length property))
-  (org-autosort-sorting-strategyp (car (read-from-string property)))
+      (org-autosort-sorting-strategyp (car (read-from-string property)))
     (error "Invalid value in :SORT: property: \"%s\"" property)
     ))))
 
@@ -160,8 +184,8 @@ When ATPARENT is non nil, sorting is assumed to be for children of the entry at 
   "Return result of get-value function for single element of sorting strategy (SORTING-STRATEGY-ELM)."
   (pcase sorting-strategy-elm
     ((app (lambda (arg) (assoc arg
-            	      org-autosort-functions-alist))
-  `(,_ . ,func) )
+    		      org-autosort-functions-alist))
+      `(,_ . ,func) )
      (org-autosort-construct-get-value-function-atom func))
     ((pred functionp)
      (funcall sorting-strategy-elm))
@@ -170,7 +194,7 @@ When ATPARENT is non nil, sorting is assumed to be for children of the entry at 
     (`(,keyfunc . ,cmpfunc)
      (if (list-but-not-consp sorting-strategy-elm) ; not a cons cell
      (apply keyfunc
-            cmpfunc)
+    	    cmpfunc)
    (org-autosort-construct-get-value-function-atom keyfunc)
    ))))
 
@@ -180,7 +204,7 @@ This function returns a list of sorting keys."
   (let ((sorting-strategy (org-autosort-get-sorting-strategy)))
     (if sorting-strategy
     (mapcar #'org-autosort-construct-get-value-function-atom
-            sorting-strategy)
+    	    sorting-strategy)
   nil
   )))
 
@@ -188,11 +212,11 @@ This function returns a list of sorting keys."
   "Return result of application of cmp function for single element of sorting strategy (SORTING-STRATEGY-ELM) called with A and B arguments."
   (pcase sorting-strategy-elm
     ((app (lambda (arg) (assoc arg
-            	      org-autosort-functions-alist))
-  `(,_ . ,func))
+    		      org-autosort-functions-alist))
+      `(,_ . ,func))
      (org-autosort-construct-cmp-function-atom func
-            				   a
-            				   b))
+    					   a
+    					   b))
     ((pred functionp)
      (funcall org-autosort-default-cmp-function
     	  a
@@ -202,16 +226,16 @@ This function returns a list of sorting keys."
     (`(,keyfunc . ,cmpfunc)
      (if (list-but-not-consp sorting-strategy-elm) ; not a cons cell
      (funcall org-autosort-default-cmp-function
-              a
-              b)
+    	      a
+    	      b)
    (if (listp cmpfunc)
-   (apply (car cmpfunc)
-              a
-              b
-              (cdr cmpfunc))
+       (apply (car cmpfunc)
+    	      a
+    	      b
+    	      (cdr cmpfunc))
      (funcall cmpfunc
-              a
-              b))))))
+    	      a
+    	      b))))))
 
 (defun org-autosort-construct-cmp-function (lista listb)
   "Return cmp at point."
@@ -219,24 +243,24 @@ This function returns a list of sorting keys."
     (if (not sorting-strategy)
     nil
   (let ((resultlist (seq-mapn (lambda (arg a b)
-            			(cons (org-autosort-construct-cmp-function-atom arg
-            									a
-            									b)
-            			      (org-autosort-construct-cmp-function-atom arg
-            									b
-            									a)))
-            		      sorting-strategy
-            		      lista
-            		      listb)) ; list of cons (a<b . b<a)
+    				(cons (org-autosort-construct-cmp-function-atom arg
+    										a
+    										b)
+    				      (org-autosort-construct-cmp-function-atom arg
+    										b
+    										a)))
+    			      sorting-strategy
+    			      lista
+    			      listb)) ; list of cons (a<b . b<a)
             (done nil)
             result
             )
     (while (and (not done)
-              (not (seq-empty-p resultlist))
-              )
-  (let ((elem (pop resultlist)))
+    	      (not (seq-empty-p resultlist))
+    	      )
+      (let ((elem (pop resultlist)))
             (unless (and (car elem)
-            	   (cdr elem)) ; not equal
+    		   (cdr elem)) ; not equal
     	  (setq done t)
     	  (setq result (car elem)))))
     result
@@ -246,51 +270,52 @@ This function returns a list of sorting keys."
   "Run 'org-sort-entries' at point with ARGS if nesessary.
 Make sure, folding state is not changed."
   (when (org-autosort-get-sorting-strategy 'atparent)
-    (save-restriction
-  (condition-case err
-  (apply #'org-sort-entries
-        	 args)
-    (user-error
-     (if (string-match-p "Nothing to sort"
-        		     (error-message-string err))
-             t
-   (signal (car err)
-        	   (cdr err))))))))
+    (save-excursion
+  (save-restriction
+    (condition-case err
+    	(apply #'org-sort-entries
+    	       args)
+      (user-error
+       (if (string-match-p "Nothing to sort"
+    			   (error-message-string err))
+    	   t
+    	 (signal (car err)
+    		 (cdr err)))))))))
 
 (defun org-autosort-sort-entries-at-point-nonrecursive ()
   "Sort org-entries at point nonrecursively.  Sort all entries _recursively_ if at the file header."
   (funcall #'org-autosort-org-sort-entries-wrapper
-   nil
-   ?f
-   #'org-autosort-construct-get-value-function
-   #'org-autosort-construct-cmp-function))
+       nil
+       ?f
+       #'org-autosort-construct-get-value-function
+       #'org-autosort-construct-cmp-function))
 
 (defun org-autosort-sort-entries-at-point-recursive ()
   "Sort org-entries at point recursively."
   (condition-case err
   (org-map-entries (lambda nil (funcall #'org-autosort-org-sort-entries-wrapper
-            			 nil
-            			 ?f
-            			 #'org-autosort-construct-get-value-function
-            			 #'org-autosort-construct-cmp-function))
-            	   nil
-            	   'tree)
+    				 nil
+    				 ?f
+    				 #'org-autosort-construct-get-value-function
+    				 #'org-autosort-construct-cmp-function))
+    		   nil
+    		   'tree)
     (error
      (if (string-match-p "Before first headline at position"
-            	     (error-message-string err))
+    		     (error-message-string err))
      (org-map-entries (lambda nil (funcall #'org-autosort-org-sort-entries-wrapper
-            			    nil
-            			    ?f
-            			    #'org-autosort-construct-get-value-function
-            			    #'org-autosort-construct-cmp-function))
-            	      nil
-            	      'file)
+    				    nil
+    				    ?f
+    				    #'org-autosort-construct-get-value-function
+    				    #'org-autosort-construct-cmp-function))
+    		      nil
+    		      'file)
    (signal (car err)
     	   (cdr err))
    ))))
 
 (defun org-autosort-sort-entries-at-point (&optional force)
-  "Sort org entries at point.  Respect value of org-autosort-sort-after-C-c-C-c if FORCE is non nil."
+  "Sort org entries at point.  Respect value of `org-autosort-sort-after-C-c-C-c' if FORCE is non nil."
   (when (or org-autosort-sort-after-C-c-C-c force)
     (if org-autosort-sort-after-C-c-C-c-recursive
     (org-autosort-sort-entries-at-point-recursive)
@@ -301,15 +326,15 @@ Make sure, folding state is not changed."
   "Sort all entries in the file recursively.  Do not respect org-autosort-sort-at-file-open if FORCE is non nil."
   (when (or org-autosort-sort-at-file-open force)
     (org-map-entries (lambda nil (funcall #'org-autosort-org-sort-entries-wrapper
-            		       nil
-            		       ?f
-            		       #'org-autosort-construct-get-value-function
-            		       #'org-autosort-construct-cmp-function))
+    			       nil
+    			       ?f
+    			       #'org-autosort-construct-get-value-function
+    			       #'org-autosort-construct-cmp-function))
                      nil
                      'file)))
 
 (add-hook 'org-mode-hook
-  #'org-autosort-sort-entries-in-file)
+      #'org-autosort-sort-entries-in-file)
 
 (provide 'org-autosort)
 
