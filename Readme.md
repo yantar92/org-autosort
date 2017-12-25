@@ -2,41 +2,41 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgfde0f2f">NEXT Automatic sorting of items in org mode</a>
+<li><a href="#orgfa26d24">Automatic sorting of items in org mode</a>
 <ul>
-<li><a href="#org9d49615">Motivation</a></li>
-<li><a href="#org1f183b3">Overview</a></li>
-<li><a href="#orgf01a38b">Configuration</a></li>
-<li><a href="#orgc1ba713">Defaults</a></li>
-<li><a href="#orgc8acc4a">NEXT Implementation</a>
+<li><a href="#orgab593c6">Motivation</a></li>
+<li><a href="#orgb3c9acd">Overview</a></li>
+<li><a href="#org4703e0d">Configuration</a></li>
+<li><a href="#org76c323b">Defaults</a></li>
+<li><a href="#org931976d">Implementation</a>
 <ul>
-<li><a href="#orgebf3f28">Header</a></li>
-<li><a href="#orge35a8ef">Custom variables</a></li>
-<li><a href="#org946bb28">NEXT Standard sorting functions</a></li>
-<li><a href="#orga70a0ee">NEXT [#A] General sorting routine</a></li>
-<li><a href="#org06dfd5d">File epilogue</a></li>
+<li><a href="#orgb403e90">Header</a></li>
+<li><a href="#org6f28c00">Custom variables</a></li>
+<li><a href="#orge6485e4">Standard sorting functions</a></li>
+<li><a href="#org7749cd9">General sorting routine</a></li>
+<li><a href="#orgd9fa159">File epilogue</a></li>
 </ul>
 </li>
-<li><a href="#orga9771e5">NEXT Ideas</a>
+<li><a href="#org53d0108">Ideas</a>
 <ul>
-<li><a href="#orgd216bfc">Sort items when opening org file, on edit??</a></li>
-<li><a href="#orgf087718">CANCELLED do not use org-sort, because it does not allow to combine sorts (i.e. sort by one criteria, if equal - by other)</a></li>
-<li><a href="#org56a3d4b">allow to define sort criteria like a lisp function in the properties field</a></li>
-<li><a href="#org68320c2">Do not sort only but filter items in org files/agenda</a></li>
-<li><a href="#orgbcbaafa">CANCELLED Take care about exact position for <code>C-c C-c</code> (say, we are inside the table - user may not want to sort)</a></li>
-<li><a href="#org13830c4">Sort only items, matching org search regex</a></li>
-<li><a href="#orge7d8182">Handle nothing to sort</a></li>
-<li><a href="#orgb7e3fbb">make interactive versions of sorting functions</a></li>
-<li><a href="#orgc594c45">autosort - do not sort but show agenda</a></li>
-<li><a href="#org7fbf2a5">add hooks to to autosort</a></li>
-<li><a href="#org6b02e76">auto add hooks according to the sort type - should be able to define hooks for every sort type</a></li>
-<li><a href="#orgff1dff2">get rid of annoying unfolding after <code>org-sort</code></a></li>
-<li><a href="#org695d22c">put buffer name in error report for wrong element of sorting strategy</a></li>
-<li><a href="#org573e2d9">should be able to define alias in sorting strategy</a></li>
-<li><a href="#org5a960e4">NEXT rewrite sorting strategy to use assoc lists</a></li>
-<li><a href="#org93a6fdc">use local hook in autosort for toggle hooks</a></li>
-<li><a href="#org9d13fc4">add this functionality? Sorting Org Mode lists using a sequence of regular expressions  13</a></li>
-<li><a href="#org375ee06">do not raise error but put a message and do not sort on wrong :SORTING: format</a></li>
+<li><a href="#org25a0fad">Sort items when opening org file, on edit??</a></li>
+<li><a href="#orged315c3">do not use org-sort, because it does not allow to combine sorts (i.e. sort by one criteria, if equal - by other)</a></li>
+<li><a href="#orgd8d9485">allow to define sort criteria like a lisp function in the properties field</a></li>
+<li><a href="#org149b11c">Do not sort only but filter items in org files/agenda</a></li>
+<li><a href="#org6ee0773">Take care about exact position for <code>C-c C-c</code> (say, we are inside the table - user may not want to sort)</a></li>
+<li><a href="#org7963246">Sort only items, matching org search regex</a></li>
+<li><a href="#org4cfe334">Handle nothing to sort</a></li>
+<li><a href="#org34b8873">make interactive versions of sorting functions</a></li>
+<li><a href="#org7a7842c">autosort - do not sort but show agenda</a></li>
+<li><a href="#org739c797">add hooks to to autosort</a></li>
+<li><a href="#org6c0c82d">auto add hooks according to the sort type - should be able to define hooks for every sort type</a></li>
+<li><a href="#org511b060">get rid of annoying unfolding after <code>org-sort</code></a></li>
+<li><a href="#org3963992">put buffer name in error report for wrong element of sorting strategy</a></li>
+<li><a href="#orga8644e5">should be able to define alias in sorting strategy</a></li>
+<li><a href="#org47d3284">rewrite sorting strategy to use assoc lists</a></li>
+<li><a href="#org2afbd84">use local hook in autosort for toggle hooks</a></li>
+<li><a href="#org4af49fe">add this functionality? Sorting Org Mode lists using a sequence of regular expressions  13</a></li>
+<li><a href="#orgbb247a6">do not raise error but put a message and do not sort on wrong :SORTING: format</a></li>
 </ul>
 </li>
 </ul>
@@ -46,12 +46,12 @@
 </div>
 
 
-<a id="orgfde0f2f"></a>
+<a id="orgfa26d24"></a>
 
-# NEXT Automatic sorting of items in org mode
+# Automatic sorting of items in org mode
 
 
-<a id="org9d49615"></a>
+<a id="orgab593c6"></a>
 
 ## Motivation
 
@@ -67,19 +67,19 @@ wish to do one day, or list of ideas). It is not comfortable to scroll
 across such kind of list to look for specific item. Sorting is
 something, that can help here.
 
--   Add some example here
+<div class="inlinetask">
+<b>Add some example here</b><br />
+nil</div>
 
--   END
+Of course, you can still use `org-sort` or agenda view with restriction
+to the current subtree, but it may be disrupting if you want to look
+through multiple of such a lists.  
 
-    Of course, you can still use `org-sort` or agenda view with restriction
-    to the current subtree, but it may be disrupting if you want to look
-    through multiple of such a lists.  
-    
-    The solution is to implement automatic sorting of subtrees in org
-    files.
+The solution is to implement automatic sorting of subtrees in org
+files.
 
 
-<a id="org1f183b3"></a>
+<a id="orgb3c9acd"></a>
 
 ## Overview
 
@@ -95,16 +95,16 @@ subtree). Global sorting order can be set via
 `org-autosort-global-sorting-strategy` variable.
 
 
-<a id="orgf01a38b"></a>
+<a id="org4703e0d"></a>
 
 ## Configuration
 
 Both `:SORT:` property and `org-autosort-global-sorting-strategy`
 are lists, which determine how to sort the entries.
 
-<a id="org0d668fc"></a>
+<a id="orga79d54d"></a>
 `org-autosort-global-sorting-strategy` defined how to sort entries by
-default. It is a list of [sorting rules](#org10b3b9d), defining the comparison
+default. It is a list of [sorting rules](#org35fb973), defining the comparison
 between sorted entries. First, the entries are sorted via first rule
 from the list. If the calculated keys are equal, second rule is used,
 and so on.
@@ -123,14 +123,14 @@ The sorting can be done after:
 -   `org-autosort-sort-entries-at-point` command
 -   `org-autosort-sort-entries-in-file` command
 
-(see [sorting triggers](#org31dc7e8) for details)
+(see [sorting triggers](#orga6cfe20) for details)
 
 
-<a id="orgc1ba713"></a>
+<a id="org76c323b"></a>
 
 ## Defaults
 
-The package provide some predefined sorting rules <a id="org10b3b9d"></a>,
+The package provide some predefined sorting rules <a id="org35fb973"></a>,
 all are listed in `org-autosort-functions-alist`.
 
     (defcustom org-autosort-functions-alist '((todo-up-0 . (:key org-autosort-get-todo :cmp <)) ; default org-sort comparison
@@ -142,8 +142,8 @@ all are listed in `org-autosort-functions-alist`.
     					  ;;					  
     					  (text-up . (:key org-autosort-get:cmp :cmp string<))
     					  (text-down . (:key org-autosort-get-text :cmp string>))
-    					  (priority-up . (:key (org-autosort-get-property "PRIORITY") :cmp string<))
-    					  (priority-down . (:key (org-autosort-get-property "PRIORITY") :cmp string>)))
+                                              (priority-up . (:key (org-autosort-get-property "PRIORITY") :cmp string<))
+                                              (priority-down . (:key (org-autosort-get-property "PRIORITY") :cmp string>)))
       "Alist, defining aliases to sorting rules.
     Each value in the list defines a sorting rule.
     The rule is a property list with :key and :cmp properties.
@@ -173,13 +173,13 @@ all are listed in `org-autosort-functions-alist`.
     Non nil return value means that first key is lesser than second key."
       :type '(function))
 
-You can control automatic sorting by setting <a id="org31dc7e8"></a>
+You can control automatic sorting by setting <a id="orga6cfe20"></a>
 
     (defcustom org-autosort-sort-at-file-open t
       "Non nil states for sorting of all items in the org file after opening."
       :type '(boolean))
 
-Default [sorting strategy](#org0d668fc) is
+Default [sorting strategy](#orga79d54d) is
 
     (defcustom org-autosort-global-sorting-strategy '(priority-down todo-up)
       "Sorting strategy, used to sort entries with :SORT: property not set or nil.
@@ -194,12 +194,12 @@ Default [sorting strategy](#org0d668fc) is
     					    (list function (repeat sexp))))))
 
 
-<a id="orgc8acc4a"></a>
+<a id="org931976d"></a>
 
-## NEXT Implementation
+## Implementation
 
 
-<a id="orgebf3f28"></a>
+<a id="orgb403e90"></a>
 
 ### Header
 
@@ -220,7 +220,7 @@ Default [sorting strategy](#org0d668fc) is
     ;;; Code:
 
 
-<a id="orge35a8ef"></a>
+<a id="org6f28c00"></a>
 
 ### Custom variables
 
@@ -249,8 +249,8 @@ Default [sorting strategy](#org0d668fc) is
     					  ;;					  
     					  (text-up . (:key org-autosort-get:cmp :cmp string<))
     					  (text-down . (:key org-autosort-get-text :cmp string>))
-    					  (priority-up . (:key (org-autosort-get-property "PRIORITY") :cmp string<))
-    					  (priority-down . (:key (org-autosort-get-property "PRIORITY") :cmp string>)))
+                                              (priority-up . (:key (org-autosort-get-property "PRIORITY") :cmp string<))
+                                              (priority-down . (:key (org-autosort-get-property "PRIORITY") :cmp string>)))
       "Alist, defining aliases to sorting rules.
     Each value in the list defines a sorting rule.
     The rule is a property list with :key and :cmp properties.
@@ -295,9 +295,9 @@ Default [sorting strategy](#org0d668fc) is
     					    (list function (repeat sexp))))))
 
 
-<a id="org946bb28"></a>
+<a id="orge6485e4"></a>
 
-### NEXT Standard sorting functions
+### Standard sorting functions
 
 -   by property
 
@@ -360,9 +360,9 @@ Default [sorting strategy](#org0d668fc) is
 -   By any timestamp
 
 
-<a id="orga70a0ee"></a>
+<a id="org7749cd9"></a>
 
-### NEXT [#A] General sorting routine
+### General sorting routine
 
     (defun org-autosort-sorting-strategy-elementp (elm)
       "Validate element ELM of sorting strategy.  Return (:key ... [:cmp ...]) if element and nil otherwise."
@@ -538,7 +538,7 @@ Default [sorting strategy](#org0d668fc) is
     (add-hook 'org-mode-hook #'org-autosort-sort-entries-in-file-maybe)
 
 
-<a id="org06dfd5d"></a>
+<a id="orgd9fa159"></a>
 
 ### File epilogue
 
@@ -547,97 +547,97 @@ Default [sorting strategy](#org0d668fc) is
     ;;; org-autosort.el ends here
 
 
-<a id="orga9771e5"></a>
+<a id="org53d0108"></a>
 
-## NEXT Ideas
+## Ideas
 
 
-<a id="orgd216bfc"></a>
+<a id="org25a0fad"></a>
 
 ### Sort items when opening org file, on edit??
 
 
-<a id="orgf087718"></a>
+<a id="orged315c3"></a>
 
-### CANCELLED do not use org-sort, because it does not allow to combine sorts (i.e. sort by one criteria, if equal - by other)
+### do not use org-sort, because it does not allow to combine sorts (i.e. sort by one criteria, if equal - by other)
 
 
-<a id="org56a3d4b"></a>
+<a id="orgd8d9485"></a>
 
 ### allow to define sort criteria like a lisp function in the properties field
 
 
-<a id="org68320c2"></a>
+<a id="org149b11c"></a>
 
 ### Do not sort only but filter items in org files/agenda
 
 
-<a id="orgbcbaafa"></a>
+<a id="org6ee0773"></a>
 
-### CANCELLED Take care about exact position for `C-c C-c` (say, we are inside the table - user may not want to sort)
+### Take care about exact position for `C-c C-c` (say, we are inside the table - user may not want to sort)
 
 
-<a id="org13830c4"></a>
+<a id="org7963246"></a>
 
 ### Sort only items, matching org search regex
 
 
-<a id="orge7d8182"></a>
+<a id="org4cfe334"></a>
 
 ### Handle nothing to sort
 
 
-<a id="orgb7e3fbb"></a>
+<a id="org34b8873"></a>
 
 ### make interactive versions of sorting functions
 
 
-<a id="orgc594c45"></a>
+<a id="org7a7842c"></a>
 
 ### autosort - do not sort but show agenda
 
 
-<a id="org7fbf2a5"></a>
+<a id="org739c797"></a>
 
 ### add hooks to to autosort
 
 
-<a id="org6b02e76"></a>
+<a id="org6c0c82d"></a>
 
 ### auto add hooks according to the sort type - should be able to define hooks for every sort type
 
 
-<a id="orgff1dff2"></a>
+<a id="org511b060"></a>
 
 ### get rid of annoying unfolding after `org-sort`
 
 
-<a id="org695d22c"></a>
+<a id="org3963992"></a>
 
 ### put buffer name in error report for wrong element of sorting strategy
 
 
-<a id="org573e2d9"></a>
+<a id="orga8644e5"></a>
 
 ### should be able to define alias in sorting strategy
 
 
-<a id="org5a960e4"></a>
+<a id="org47d3284"></a>
 
-### NEXT rewrite sorting strategy to use assoc lists
+### rewrite sorting strategy to use assoc lists
 
 
-<a id="org93a6fdc"></a>
+<a id="org2afbd84"></a>
 
 ### use local hook in autosort for toggle hooks
 
 
-<a id="org9d13fc4"></a>
+<a id="org4af49fe"></a>
 
 ### add this functionality? [Sorting Org Mode lists using a sequence of regular expressions  13](http://sachachua.com/blog/2017/12/sorting-org-mode-lists-using-a-sequence-of-regular-expressions/)
 
 
-<a id="org375ee06"></a>
+<a id="orgbb247a6"></a>
 
 ### do not raise error but put a message and do not sort on wrong :SORTING: format
 
