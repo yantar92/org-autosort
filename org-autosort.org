@@ -46,7 +46,7 @@ Both =:SORT:= property and =org-autosort-global-sorting-strategy=
 are lists, which determine how to sort the entries.
 
 <<org-autosort-global-sorting-strategy>>
-=org-autosort-global-sorting-strategy= defined how to sort entries by
+=org-autosort-global-sorting-strategy= defines how to sort entries by
 default. It is a list of [[sorting rules][sorting rules]], defining the comparison
 between sorted entries. First, the entries are sorted via first rule
 from the list. If the calculated keys are equal, second rule is used,
