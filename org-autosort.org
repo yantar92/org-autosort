@@ -4,6 +4,7 @@
 #+EXPORT_FILE_NAME: Readme.md
 #+OPTIONS: tags:nil todo:nil num:nil
 #+PROPERTY: header-args :tangle no
+#+EXCLUDE_TAGS: :NOEXPORT:
 
 * NEXT Automatic sorting of items in org mode                           :COMMON:
 ** Motivation

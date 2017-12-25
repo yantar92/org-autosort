@@ -2,6 +2,7 @@ org-autosort: org-autosort.el
 
 docs: org-autosort.org
 	emacs $< --batch -f org-md-export-to-markdown --kill
+	mv org-autosort.md Readme.md
 
 %.elc : %.el
 	rm -f $@
