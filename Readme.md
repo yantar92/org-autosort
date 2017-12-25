@@ -2,12 +2,12 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgf173e0c">Automatic sorting of items in org mode</a>
+<li><a href="#orgf71feb5">Automatic sorting of items in org mode</a>
 <ul>
-<li><a href="#org8d09006">Motivation</a></li>
-<li><a href="#orgbbb04bb">Overview</a></li>
-<li><a href="#org38abd8f">Configuration</a></li>
-<li><a href="#org4e4bb41">Defaults</a></li>
+<li><a href="#orgc3bcda3">Motivation</a></li>
+<li><a href="#orgb0bdc1a">Overview</a></li>
+<li><a href="#orgcac81f8">Configuration</a></li>
+<li><a href="#orgc2ce2bd">Defaults</a></li>
 </ul>
 </li>
 </ul>
@@ -15,12 +15,12 @@
 </div>
 
 
-<a id="orgf173e0c"></a>
+<a id="orgf71feb5"></a>
 
 # Automatic sorting of items in org mode
 
 
-<a id="org8d09006"></a>
+<a id="orgc3bcda3"></a>
 
 ## Motivation
 
@@ -44,7 +44,7 @@ The solution is to implement automatic sorting of subtrees in org
 files.
 
 
-<a id="orgbbb04bb"></a>
+<a id="orgb0bdc1a"></a>
 
 ## Overview
 
@@ -60,16 +60,16 @@ subtree). Global sorting order can be set via
 `org-autosort-global-sorting-strategy` variable.
 
 
-<a id="org38abd8f"></a>
+<a id="orgcac81f8"></a>
 
 ## Configuration
 
 Both `:SORT:` property and `org-autosort-global-sorting-strategy`
 are lists, which determine how to sort the entries.
 
-<a id="orgd397d23"></a>
-`org-autosort-global-sorting-strategy` defined how to sort entries by
-default. It is a list of [sorting rules](#orga9d2cc6), defining the comparison
+<a id="org97904cd"></a>
+`org-autosort-global-sorting-strategy` defines how to sort entries by
+default. It is a list of [sorting rules](#org6d3dec0), defining the comparison
 between sorted entries. First, the entries are sorted via first rule
 from the list. If the calculated keys are equal, second rule is used,
 and so on.
@@ -88,14 +88,14 @@ The sorting can be done after:
 -   `org-autosort-sort-entries-at-point` command
 -   `org-autosort-sort-entries-in-file` command
 
-(see [sorting triggers](#org6dbeab6) for details)
+(see [sorting triggers](#org6e106bb) for details)
 
 
-<a id="org4e4bb41"></a>
+<a id="orgc2ce2bd"></a>
 
 ## Defaults
 
-The package provide some predefined sorting rules <a id="orga9d2cc6"></a>,
+The package provide some predefined sorting rules <a id="org6d3dec0"></a>,
 all are listed in `org-autosort-functions-alist`.
 
     (defcustom org-autosort-functions-alist '((todo-up-0 . (:key org-autosort-get-todo :cmp <)) ; default org-sort comparison
@@ -138,13 +138,13 @@ all are listed in `org-autosort-functions-alist`.
     Non nil return value means that first key is lesser than second key."
       :type '(function))
 
-You can control automatic sorting by setting <a id="org6dbeab6"></a>
+You can control automatic sorting by setting <a id="org6e106bb"></a>
 
     (defcustom org-autosort-sort-at-file-open t
       "Non nil states for sorting of all items in the org file after opening."
       :type '(boolean))
 
-Default [sorting strategy](#orgd397d23) is
+Default [sorting strategy](#org97904cd) is
 
     (defcustom org-autosort-global-sorting-strategy '(priority-down todo-up)
       "Sorting strategy, used to sort entries with :SORT: property not set or nil.
