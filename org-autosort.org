@@ -1,10 +1,14 @@
 #+AUTHORS: yantar92
 #+EMAIL: yantar92@gmail.com
-#+PROPERTY: header-args :tangle yes
 #+OPTIONS: tags:nil todo:nil num:nil
 #+PROPERTY: header-args :tangle no
 
-* NEXT Automatic sorting of items in org mode                           :COMMON:
+* NEXT Automatic sorting of items in org mode                        :COMMON:
+:LOGBOOK:
+- State "NEXT"       from "NEXT"       [2018-01-01 Mon 13:31]
+- State "NEXT"       from "NEXT"       [2018-01-01 Mon 13:21]
+CLOCK: [2017-12-25 Mon 21:58]--[2017-12-25 Mon 22:00] =>  0:02
+:END:
 ** Motivation
 For now, standard org capabilities allow to sort entries in the agenda
 views automatically. However, sorting of the actual org files is
@@ -88,7 +92,7 @@ Default [[org-autosort-global-sorting-strategy][sorting strategy]] is
 <<autosort-default-strategy>>
 #+END_SRC
 
-** NEXT Implementation                                             :NOEXPORT:
+** NEXT Implementation                                            :NOEXPORT:
 :PROPERTIES:
 :header-args: :tangle yes
 :END:
@@ -210,8 +214,14 @@ nil means that no sorting should be done by default."
 CLOCK: [2017-12-18 Mon 20:59]--[2017-12-18 Mon 21:21] =>  0:22
 CLOCK: [2017-12-10 Sun 17:08]--[2017-12-10 Sun 17:13] =>  0:05
 :END:
-**** DONE by property
-CLOSED: [2017-12-10 Sun 17:34]
+**** NEXT List compare function
+:PROPERTIES:
+:CREATED:  [2017-12-29 Fri 05:48]
+:END:
+Compare arguments according to the list argument provided, so that
+matching items will be sorted as in the list, and non matching will be
+moved to the end. List entries can be regex.
+**** NEXT by property
 :PROPERTIES:
 :ID:       51552471-6f2b-4792-a8a3-b4bb0d3618d8
 :END:
@@ -222,8 +232,7 @@ CLOSED: [2017-12-10 Sun 17:34]
 		 property
 		 'selective))
 #+end_src
-**** DONE By todo keyword
-CLOSED: [2017-12-10 Sun 17:34]
+**** NEXT By todo keyword
 :PROPERTIES:
 :ID:       0d4d78c1-a4a2-4091-8142-ea9e70434d73
 :END:
@@ -239,8 +248,7 @@ CLOSED: [2017-12-10 Sun 17:34]
 		(length (member m
 				org-todo-keywords-1))))))
 #+end_src
-**** DONE By todo keyword, custom
-CLOSED: [2017-12-18 Mon 20:48]
+**** NEXT By todo keyword, custom
 :PROPERTIES:
 :ID:       87e5b164-fe1f-4618-9b07-741c27e37bc0
 :END:
@@ -261,8 +269,8 @@ CLOSED: [2017-12-18 Mon 20:48]
 		   0)))
     (< posa posb)))
 #+END_SRC
-**** DONE Alphabetic
-CLOSED: [2017-12-18 Mon 20:50] SCHEDULED: <2017-12-12 Tue>
+**** NEXT Alphabetic
+SCHEDULED: <2017-12-12 Tue>
 :PROPERTIES:
 :ID:       5205ed5d-cb92-4711-86b7-c2bf9549f0f5
 :END:
@@ -282,8 +290,8 @@ CLOCK: [2017-12-18 Mon 20:33]--[2017-12-18 Mon 20:50] =>  0:17
 **** TODO By scheduled time/date
 **** TODO By active timestamp
 **** TODO By any timestamp
-*** NEXT [#A] General sorting routine
-SCHEDULED: <2017-12-18 Mon>
+*** DONE [#A] General sorting routine
+CLOSED: [2017-12-25 Mon 22:00] SCHEDULED: <2017-12-18 Mon>
 :PROPERTIES:
 :ID:       7b077f97-a744-4197-9b4f-015af71ab95f
 :END:
@@ -334,7 +342,7 @@ Signal user error and return nil if argument is not a sorting strategy."
 	  (if (equal err-elm 'none)
 	      sorting-strategy
 	    nil
-	    (user-error "Wrong element of sorting strategy: \"%s\" in buffer: %s"
+	    (user-error "org-autosort: Wrong element of sorting strategy: \"%s\" in buffer: %s"
 			err-elm (buffer-name)))))))
 
 (defun org-autosort-get-sorting-strategy ()
@@ -349,7 +357,7 @@ Signal user error and return nil if argument is not a sorting strategy."
       (_ (if (= (cdr (read-from-string property))
 		(length property))
 	     (org-autosort-sorting-strategyp (car (read-from-string property)))
-	   (user-error "Cannot read :SORT: property: \"%s\" in buffer: %s" property (buffer-name))
+	   (user-error "org-autosort: Cannot read :SORT: property: \"%s\" in buffer: %s" property (buffer-name))
 	   nil)))))
 
 (defun org-autosort-construct-get-value-function-atom (sorting-strategy-elm)
@@ -481,74 +489,17 @@ CLOSED: [2017-12-10 Sun 19:40]
 
 ;;; org-autosort.el ends here
 #+end_src
-** NEXT Ideas                                                   :SKIP:NOEXPORT:
+** Ideas                                                     :SKIP:NOEXPORT:
 :PROPERTIES:
-:SORT:     (org-todo-state-custom-down)
-:END:
-*** TODO Sort items when opening org file, on edit??
-*** CANCELLED do not use org-sort, because it does not allow to combine sorts (i.e. sort by one criteria, if equal - by other) :CANCELLED:
-CLOSED: [2017-12-12 Tue 21:18]
-:LOGBOOK:
-- State "CANCELLED"  from "TODO"          [2017-12-12 Tue 21:18] \\
-  Made a proper wrapper
-:END:
-*** DONE allow to define sort criteria like a lisp function in the properties field
-CLOSED: [2017-12-12 Tue 21:18]
-*** TODO Do not sort only but filter items in org files/agenda
-*** CANCELLED Take care about exact position for =C-c C-c= (say, we are inside the table - user may not want to sort) :CANCELLED:
-CLOSED: [2017-12-11 Mon 16:56]
-:LOGBOOK:
-- State "CANCELLED"  from "TODO"          [2017-12-11 Mon 16:56]
+:SORT:     (todo-down)
 :END:
 *** TODO Sort only items, matching org search regex
-*** DONE Handle nothing to sort
-CLOSED: [2017-12-11 Mon 16:56] SCHEDULED: <2017-12-11 Mon>
-:LOGBOOK:
-CLOCK: [2017-12-11 Mon 16:24]--[2017-12-11 Mon 16:56] =>  0:32
-CLOCK: [2017-12-11 Mon 15:58]--[2017-12-11 Mon 16:08] =>  0:10
-:END:
-*** TODO make interactive versions of sorting functions
-*** TODO autosort - do not sort but show agenda
-:PROPERTIES:
-:CREATED:  [2017-12-15 Fri 22:44]
-:END:
-:LOGBOOK:
-CLOCK: [2017-12-15 Fri 22:44]--[2017-12-15 Fri 22:45] =>  0:01
-:END:
-*** TODO add hooks to to autosort
-:PROPERTIES:
-:CREATED:  [2017-12-18 Mon 09:56]
-:END:
-*** TODO auto add hooks according to the sort type - should be able to define hooks for every sort type
-:PROPERTIES:
-:CREATED:  [2017-12-18 Mon 09:57]
-:END:
-*** TODO get rid of annoying unfolding after =org-sort=
-:PROPERTIES:
-:CREATED:  [2017-12-18 Mon 20:54]
-:END:
-:LOGBOOK:
-CLOCK: [2017-12-18 Mon 20:57]--[2017-12-18 Mon 20:58] =>  0:01
-CLOCK: [2017-12-18 Mon 20:54]--[2017-12-18 Mon 20:57] =>  0:03
-:END:
-*** TODO put buffer name in error report for wrong element of sorting strategy
-:PROPERTIES:
-:CREATED:  [2017-12-18 Mon 20:57]
-:END:
 *** TODO should be able to define alias in sorting strategy
 :PROPERTIES:
 :CREATED:  [2017-12-18 Mon 20:58]
 :END:
 :LOGBOOK:
 CLOCK: [2017-12-18 Mon 20:58]--[2017-12-18 Mon 20:59] =>  0:01
-:END:
-*** NEXT rewrite sorting strategy to use assoc lists
-:PROPERTIES:
-:CREATED:  [2017-12-18 Mon 21:21]
-:END:
-:LOGBOOK:
-CLOCK: [2017-12-25 Mon 15:18]
-CLOCK: [2017-12-18 Mon 21:21]--[2017-12-18 Mon 21:25] =>  0:04
 :END:
 *** TODO use local hook in autosort for toggle hooks
 :PROPERTIES:
@@ -559,7 +510,166 @@ CLOCK: [2017-12-18 Mon 21:21]--[2017-12-18 Mon 21:25] =>  0:04
 :CREATED:  [2017-12-21 Thu 23:50]
 :Source:   http://sachachua.com/blog/2017/12/sorting-org-mode-lists-using-a-sequence-of-regular-expressions/
 :END:
-*** TODO do not raise error but put a message and do not sort on wrong :SORTING: format
+*** TODO Add trigger to not read lisp from sort property it is not safe
+:PROPERTIES:
+:CREATED:  [2017-12-25 Mon 22:05]
+:END:
+*** TODO sort signalling error -resolve [[id:e9132d5f-cc43-4bae-b9ed-244e21e8b8cc][Test test]]
+:PROPERTIES:
+:CREATED: [2017-12-29 Fri 22:37]
+:END:
+:LOGBOOK:
+CLOCK: [2017-12-29 Fri 22:37]--[2017-12-29 Fri 22:38] =>  0:01
+:END:
+** NEXT Versions                                                  :NOEXPORT:
+:PROPERTIES:
+:CREATED:  [2017-12-28 Thu 23:15]
+:END:
+:LOGBOOK:
+CLOCK: [2017-12-29 Fri 05:59]--[2017-12-29 Fri 06:00] =>  0:01
+:END:
+*** NEXT 1.0
+:PROPERTIES:
+:CREATED:  [2017-12-28 Thu 23:15]
+:ORDERED:  t
+:END:
+:LOGBOOK:
+CLOCK: [2017-12-29 Fri 05:50]--[2017-12-29 Fri 05:59] =>  0:09
+:END:
+- =org-agenda-sorting-strategy= like sorting specs <<v1.1>>
+- sort entries in file on open <<v1.2>>
+- sort entries in place <<v1.3>>
+- sort lists <<v1.4>>
+- construct comparison function with the list of items/regex, which
+  should be placed on the top no matter what <<v1.5>>
+- update the sort on changes, including creating new entries <<v1.6>>
+- interactive sort via subtree agenda invocation, similar to filtering
+  <<v1.7>>
+*************** TODO Make it noweb refs, insert into files
+*************** END
+
+**** NEXT [#A] 0.1
+SCHEDULED: <2018-01-13 Sat>
+:PROPERTIES:
+:CREATED:  [2017-12-28 Thu 23:16]
+:END:
+[[v1.1][specs]], [[v1.2][on open]]
+***** DONE 0.10
+CLOSED: [2018-01-01 Mon 13:21]
+:PROPERTIES:
+:CREATED:  [2018-01-01 Mon 13:18]
+:END:
+:LOGBOOK:
+- State "DONE"       from              [2018-01-01 Mon 13:21]
+:END:
+****** DONE allow to define sort criteria like a lisp function in the properties field
+CLOSED: [2017-12-12 Tue 21:18]
+****** CANCELLED Take care about exact position for =C-c C-c= (say, we are inside the table - user may not want to sort) :CANCELLED:
+CLOSED: [2017-12-11 Mon 16:56]
+:LOGBOOK:
+- State "CANCELLED"  from "TODO"          [2017-12-11 Mon 16:56]
+:END:
+****** CANCELLED do not use org-sort, because it does not allow to combine sorts (i.e. sort by one criteria, if equal - by other) :CANCELLED:
+CLOSED: [2017-12-12 Tue 21:18]
+:LOGBOOK:
+- State "CANCELLED"  from "TODO"          [2017-12-12 Tue 21:18] \\
+  Made a proper wrapper
+:END:
+***** DONE 0.11
+CLOSED: [2018-01-01 Mon 13:21]
+:PROPERTIES:
+:CREATED:  [2018-01-01 Mon 13:18]
+:END:
+:LOGBOOK:
+- State "DONE"       from              [2018-01-01 Mon 13:21]
+:END:
+****** DONE put buffer name in error report for wrong element of sorting strategy
+CLOSED: [2017-12-25 Mon 21:59]
+:PROPERTIES:
+:CREATED:  [2017-12-18 Mon 20:57]
+:END:
+****** DONE Handle nothing to sort
+CLOSED: [2017-12-11 Mon 16:56] SCHEDULED: <2017-12-11 Mon>
+:LOGBOOK:
+CLOCK: [2017-12-11 Mon 16:24]--[2017-12-11 Mon 16:56] =>  0:32
+CLOCK: [2017-12-11 Mon 15:58]--[2017-12-11 Mon 16:08] =>  0:10
+:END:
+****** DONE make interactive versions of sorting functions
+CLOSED: [2017-12-25 Mon 21:59]
+****** DONE rewrite sorting strategy to use assoc lists
+CLOSED: [2017-12-25 Mon 21:58]
+:PROPERTIES:
+:CREATED:  [2017-12-18 Mon 21:21]
+:END:
+:LOGBOOK:
+CLOCK: [2017-12-25 Mon 15:18]--[2017-12-25 Mon 21:58] =>  6:40
+CLOCK: [2017-12-18 Mon 21:21]--[2017-12-18 Mon 21:25] =>  0:04
+:END:
+****** DONE do not raise error but put a message and do not sort on wrong :SORTING: format
+CLOSED: [2017-12-25 Mon 22:00]
 :PROPERTIES:
 :CREATED:  [2017-12-23 Sat 11:21]
+:END:
+***** NEXT 0.12
+:PROPERTIES:
+:CREATED:  [2018-01-01 Mon 13:21]
+:END:
+****** TODO add hooks to to autosort
+:PROPERTIES:
+:CREATED:  [2017-12-18 Mon 09:56]
+:END:
+****** NEXT get rid of annoying unfolding after =org-sort=
+:PROPERTIES:
+:CREATED:  [2017-12-18 Mon 20:54]
+:END:
+:LOGBOOK:
+CLOCK: [2017-12-18 Mon 20:57]--[2017-12-18 Mon 20:58] =>  0:01
+CLOCK: [2017-12-18 Mon 20:54]--[2017-12-18 Mon 20:57] =>  0:03
+:END:
+
+**** TODO 0.2
+:PROPERTIES:
+:CREATED:  [2017-12-28 Thu 23:16]
+:END:
+:LOGBOOK:
+- State "TODO"       from "NEXT"          [2018-01-01 Mon 13:22]
+:END:
+[[v1.3][interactive in place]],[[v1.4][list sort]], [[v1.5][comparison list]]
+**** TODO 0.3
+:PROPERTIES:
+:CREATED:  [2017-12-28 Thu 23:16]
+:END:
+[[v1.6][adaptive sort update]]
+***** TODO Share on reddit
+:PROPERTIES:
+:CREATED:  [2017-12-29 Fri 05:57]
+:END:
+**** TODO 0.4
+:PROPERTIES:
+:CREATED:  [2017-12-28 Thu 23:16]
+:END:
+[[v1.7][interactive sort via agenda]]
+**** 0.5
+:PROPERTIES:
+:CREATED:  [2017-12-28 Thu 23:16]
+:END:
+**** 0.6
+:PROPERTIES:
+:CREATED:  [2017-12-28 Thu 23:16]
+:END:
+**** 0.7
+:PROPERTIES:
+:CREATED:  [2017-12-28 Thu 23:16]
+:END:
+**** 0.8
+:PROPERTIES:
+:CREATED:  [2017-12-28 Thu 23:16]
+:END:
+**** 0.9
+:PROPERTIES:
+:CREATED:  [2017-12-28 Thu 23:16]
+:END:
+**** 1.0
+:PROPERTIES:
+:CREATED:  [2017-12-28 Thu 23:16]
 :END:

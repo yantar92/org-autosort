@@ -150,7 +150,7 @@ Signal user error and return nil if argument is not a sorting strategy."
 	  (if (equal err-elm 'none)
 	      sorting-strategy
 	    nil
-	    (user-error "Wrong element of sorting strategy: \"%s\" in buffer: %s"
+	    (user-error "org-autosort: Wrong element of sorting strategy: \"%s\" in buffer: %s"
 			err-elm (buffer-name)))))))
 
 (defun org-autosort-get-sorting-strategy ()
@@ -165,7 +165,7 @@ Signal user error and return nil if argument is not a sorting strategy."
       (_ (if (= (cdr (read-from-string property))
 		(length property))
 	     (org-autosort-sorting-strategyp (car (read-from-string property)))
-	   (user-error "Cannot read :SORT: property: \"%s\" in buffer: %s" property (buffer-name))
+	   (user-error "org-autosort: Cannot read :SORT: property: \"%s\" in buffer: %s" property (buffer-name))
 	   nil)))))
 
 (defun org-autosort-construct-get-value-function-atom (sorting-strategy-elm)
