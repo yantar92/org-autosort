@@ -1,3 +1,4 @@
+;; [[id:3e603efc-e71a-4520-bcef-265cff481455][Header:1]]
 ;;; org-autosort.el --- Sort entries in org files automatically -*- lexical-binding: t; -*-
 
 ;; Version: 0.11
@@ -13,17 +14,25 @@
 ;; The sorting order can be set globally through all the org files, locally in file, or locally in a subtree using :SORT: property.
 
 ;;; Code:
+;; Header:1 ends here
 
+;; [[id:08e58824-f88a-4d3b-a79e-00a1514eb68a][Custom variables:1]]
 (defgroup org-autosort nil
   "Customization options of org-autosort package.")
+;; Custom variables:1 ends here
 
+;; [[id:08e58824-f88a-4d3b-a79e-00a1514eb68a][Custom variables:2]]
 (defcustom org-autosort-sort-all nil
   "Sort entries if :SORT: property is not defined.")
+;; Custom variables:2 ends here
 
+;; [[id:08e58824-f88a-4d3b-a79e-00a1514eb68a][autosort-triggers]]
 (defcustom org-autosort-sort-at-file-open t
   "Non nil states for sorting of all items in the org file after opening."
   :type '(boolean))
+;; autosort-triggers ends here
 
+;; [[id:08e58824-f88a-4d3b-a79e-00a1514eb68a][autosort-functions]]
 (defcustom org-autosort-functions-alist '((todo-up-0 . (:key org-autosort-get-todo :cmp <)) ; default org-sort comparison
 					  (todo-down-0 . (:key org-autosort-get-todo :cmp >))
 					  ;; compare according to `org-autosort-todo-cmp-order'
@@ -63,7 +72,9 @@ It is used if cmp function is not defined.
 It must accept two arguments - first and second sorting key to compare.
 Non nil return value means that first key is lesser than second key."
   :type '(function))
+;; autosort-functions ends here
 
+;; [[id:08e58824-f88a-4d3b-a79e-00a1514eb68a][autosort-default-strategy]]
 (defcustom org-autosort-global-sorting-strategy '(priority-down todo-up)
   "Sorting strategy, used to sort entries with :SORT: property not set or nil.
 This is a list, which elements can be:
@@ -75,13 +86,17 @@ nil means that no sorting should be done by default."
   :type '(choice symbol
 		 (plist :value-type (choise function
 					    (list function (repeat sexp))))))
+;; autosort-default-strategy ends here
 
+;; [[id:51552471-6f2b-4792-a8a3-b4bb0d3618d8][by property:1]]
 (defun org-autosort-get-property (property)
   "Get the value of PROPERTY for sorting."
   (org-entry-get (point)
 		 property
 		 'selective))
+;; by property:1 ends here
 
+;; [[id:0d4d78c1-a4a2-4091-8142-ea9e70434d73][By todo keyword:1]]
 (defun org-autosort-get-todo ()
   "Get the value of todo keyword for sorting." ; stolen from org-sort-entries in org.el
   (let* ((m (org-get-todo-state))
@@ -92,7 +107,9 @@ nil means that no sorting should be done by default."
        (funcall s
 		(length (member m
 				org-todo-keywords-1))))))
+;; By todo keyword:1 ends here
 
+;; [[id:87e5b164-fe1f-4618-9b07-741c27e37bc0][By todo keyword, custom:1]]
 (defvar org-autosort-todo-cmp-order nil
   "Order of todo keywords to be shown in sorted subtrees.
        Follow `org-todo-keywords-1' if nil."
@@ -108,12 +125,16 @@ nil means that no sorting should be done by default."
 				 b)
 		   0)))
     (< posa posb)))
+;; By todo keyword, custom:1 ends here
 
+;; [[id:5205ed5d-cb92-4711-86b7-c2bf9549f0f5][Alphabetic:1]]
 (defun org-autosort-get-text ()
   "Get the text or tags (if text is empty) of the current entry."
   (nth 4 (org-heading-components))
   )
+;; Alphabetic:1 ends here
 
+;; [[id:7b077f97-a744-4197-9b4f-015af71ab95f][General sorting routine:1]]
 (defun org-autosort-sorting-strategy-elementp (elm)
   "Validate element ELM of sorting strategy.  Return (:key ... [:cmp ...]) if element and nil otherwise."
   (pcase elm
@@ -286,7 +307,10 @@ Sort recursively if invoked with \\[universal-argument]."
   (when org-autosort-sort-at-file-open (org-autosort-sort-entries-in-file)))
 
 (add-hook 'org-mode-hook #'org-autosort-sort-entries-in-file-maybe)
+;; General sorting routine:1 ends here
 
+;; [[id:cf53b069-fcbb-45f9-9a80-e05f88d1fec5][File epilogue:1]]
 (provide 'org-autosort)
 
 ;;; org-autosort.el ends here
+;; File epilogue:1 ends here

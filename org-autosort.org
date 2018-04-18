@@ -4,12 +4,20 @@
 #+PROPERTY: header-args :tangle no
 
 * NEXT Automatic sorting of items in org mode                        :COMMON:
+:PROPERTIES:
+:HASH:     -672068472956142845
+:MODIFIED: 2018-03-14 10:38
+:END:
 :LOGBOOK:
 - State "NEXT"       from "NEXT"       [2018-01-01 Mon 13:31]
 - State "NEXT"       from "NEXT"       [2018-01-01 Mon 13:21]
 CLOCK: [2017-12-25 Mon 21:58]--[2017-12-25 Mon 22:00] =>  0:02
 :END:
 ** Motivation
+:PROPERTIES:
+:HASH:     -552853744073382351
+:MODIFIED: 2018-03-14 10:38
+:END:
 For now, standard org capabilities allow to sort entries in the agenda
 views automatically. However, sorting of the actual org files is
 rather limited. We only have =org-sort= function, which allows to sort
@@ -23,7 +31,15 @@ across such kind of list to look for specific item. Sorting is
 something, that can help here.
 
 *************** TODO Add some example here              :NOEXPORT:
+:PROPERTIES:
+:HASH:     -2274824553951917537
+:MODIFIED: 2018-03-14 10:38
+:END:
 *************** END
+:PROPERTIES:
+:HASH: 1678775129075393153
+:MODIFIED: 2018-03-14 10:38
+:END:
 
 Of course, you can still use =org-sort= or agenda view with restriction
 to the current subtree, but it may be disrupting if you want to look
@@ -33,6 +49,10 @@ The solution is to implement automatic sorting of subtrees in org
 files.
 
 ** Overview
+:PROPERTIES:
+:HASH:     996478874712060901
+:MODIFIED: 2018-03-14 10:38
+:END:
 This package aims to implement an automatic sorting of the subtrees
 in org files. The sorting order can be set globally through all the
 org files, locally in file, or locally in a subtree using =:SORT:=
@@ -45,6 +65,10 @@ subtree). Global sorting order can be set via
 =org-autosort-global-sorting-strategy= variable.
 
 ** Configuration
+:PROPERTIES:
+:HASH:     30386996789640446
+:MODIFIED: 2018-03-14 10:38
+:END:
 
 Both =:SORT:= property and =org-autosort-global-sorting-strategy=
 are lists, which determine how to sort the entries.
@@ -72,6 +96,8 @@ The sorting can be done after:
 ** Defaults
 :PROPERTIES:
 :CREATED:  [2017-12-25 Mon 16:06]
+:HASH:     1585236984715778003
+:MODIFIED: 2018-03-14 10:38
 :END:
 The package provide some predefined sorting rules <<sorting rules>>,
 all are listed in =org-autosort-functions-alist=.
@@ -92,9 +118,11 @@ Default [[org-autosort-global-sorting-strategy][sorting strategy]] is
 <<autosort-default-strategy>>
 #+END_SRC
 
-** NEXT Implementation                                            :NOEXPORT:
+** NEXT Implementation                                     :NOEXPORT:NOARCHIVE:
 :PROPERTIES:
 :header-args: :tangle yes
+:HASH:     -1238412354080526388
+:MODIFIED: 2018-03-14 10:38
 :END:
 :LOGBOOK:
 CLOCK: [2017-12-10 Sun 17:36]--[2017-12-10 Sun 20:02] =>  2:26
@@ -104,6 +132,8 @@ CLOCK: [2017-12-10 Sun 10:21]--[2017-12-10 Sun 11:02] =>  0:41
 CLOSED: [2017-12-11 Mon 15:58]
 :PROPERTIES:
 :ID:       3e603efc-e71a-4520-bcef-265cff481455
+:HASH:     1461856171498077217
+:MODIFIED: 2018-03-14 10:38
 :END:
 #+begin_src emacs-lisp
 ;;; org-autosort.el --- Sort entries in org files automatically -*- lexical-binding: t; -*-
@@ -126,6 +156,8 @@ CLOSED: [2017-12-11 Mon 15:58]
 CLOSED: [2017-12-18 Mon 21:23]
 :PROPERTIES:
 :ID:       08e58824-f88a-4d3b-a79e-00a1514eb68a
+:HASH:     2222096705049950595
+:MODIFIED: 2018-03-14 10:38
 :END:
 :LOGBOOK:
 CLOCK: [2017-12-10 Sun 17:13]--[2017-12-10 Sun 17:33] =>  0:20
@@ -209,6 +241,8 @@ nil means that no sorting should be done by default."
 *** NEXT Standard sorting functions
 :PROPERTIES:
 :ID:       c478d941-ddbf-49cc-b38c-a03c33779817
+:HASH:     352248769472354762
+:MODIFIED: 2018-03-14 10:38
 :END:
 :LOGBOOK:
 CLOCK: [2017-12-18 Mon 20:59]--[2017-12-18 Mon 21:21] =>  0:22
@@ -217,6 +251,8 @@ CLOCK: [2017-12-10 Sun 17:08]--[2017-12-10 Sun 17:13] =>  0:05
 **** NEXT List compare function
 :PROPERTIES:
 :CREATED:  [2017-12-29 Fri 05:48]
+:HASH:     -2100350996340344072
+:MODIFIED: 2018-03-14 10:38
 :END:
 Compare arguments according to the list argument provided, so that
 matching items will be sorted as in the list, and non matching will be
@@ -224,6 +260,8 @@ moved to the end. List entries can be regex.
 **** NEXT by property
 :PROPERTIES:
 :ID:       51552471-6f2b-4792-a8a3-b4bb0d3618d8
+:HASH:     -320681342042292485
+:MODIFIED: 2018-03-14 10:38
 :END:
 #+begin_src emacs-lisp 
 (defun org-autosort-get-property (property)
@@ -235,6 +273,8 @@ moved to the end. List entries can be regex.
 **** NEXT By todo keyword
 :PROPERTIES:
 :ID:       0d4d78c1-a4a2-4091-8142-ea9e70434d73
+:HASH:     -1768191583758398711
+:MODIFIED: 2018-03-14 10:38
 :END:
 #+begin_src emacs-lisp 
 (defun org-autosort-get-todo ()
@@ -251,6 +291,8 @@ moved to the end. List entries can be regex.
 **** NEXT By todo keyword, custom
 :PROPERTIES:
 :ID:       87e5b164-fe1f-4618-9b07-741c27e37bc0
+:HASH:     645314751951980351
+:MODIFIED: 2018-03-14 10:38
 :END:
 #+BEGIN_SRC emacs-lisp
 (defvar org-autosort-todo-cmp-order nil
@@ -273,6 +315,8 @@ moved to the end. List entries can be regex.
 SCHEDULED: <2017-12-12 Tue>
 :PROPERTIES:
 :ID:       5205ed5d-cb92-4711-86b7-c2bf9549f0f5
+:HASH:     -942421056608455741
+:MODIFIED: 2018-03-14 10:38
 :END:
 :LOGBOOK:
 CLOCK: [2017-12-18 Mon 20:33]--[2017-12-18 Mon 20:50] =>  0:17
@@ -284,16 +328,46 @@ CLOCK: [2017-12-18 Mon 20:33]--[2017-12-18 Mon 20:50] =>  0:17
   )
 #+END_SRC
 **** TODO By first inactive timestamp
+:PROPERTIES:
+:HASH:     2101307295418462336
+:MODIFIED: 2018-03-14 10:38
+:END:
 **** TODO By deadline
+:PROPERTIES:
+:HASH:     -625510309265660769
+:MODIFIED: 2018-03-14 10:38
+:END:
 **** TODO By clocking time
+:PROPERTIES:
+:HASH:     1948764884121235851
+:MODIFIED: 2018-03-14 10:38
+:END:
 **** TODO Numerically, beginning of the entry/item
+:PROPERTIES:
+:HASH:     -2055352313787845662
+:MODIFIED: 2018-03-14 10:38
+:END:
 **** TODO By scheduled time/date
+:PROPERTIES:
+:HASH:     -1527628943222985362
+:MODIFIED: 2018-03-14 10:38
+:END:
 **** TODO By active timestamp
+:PROPERTIES:
+:HASH:     481626822825531565
+:MODIFIED: 2018-03-14 10:38
+:END:
 **** TODO By any timestamp
+:PROPERTIES:
+:HASH:     1955861183536926727
+:MODIFIED: 2018-03-14 10:38
+:END:
 *** DONE [#A] General sorting routine
 CLOSED: [2017-12-25 Mon 22:00] SCHEDULED: <2017-12-18 Mon>
 :PROPERTIES:
 :ID:       7b077f97-a744-4197-9b4f-015af71ab95f
+:HASH:     1866380525324626648
+:MODIFIED: 2018-03-14 10:38
 :END:
 :LOGBOOK:
 CLOCK: [2017-12-25 Mon 15:14]--[2017-12-25 Mon 15:18] =>  0:04
@@ -483,6 +557,8 @@ Sort recursively if invoked with \\[universal-argument]."
 CLOSED: [2017-12-10 Sun 19:40]
 :PROPERTIES:
 :ID:       cf53b069-fcbb-45f9-9a80-e05f88d1fec5
+:HASH:     2208166878464628288
+:MODIFIED: 2018-03-14 10:38
 :END:
 #+begin_src emacs-lisp 
 (provide 'org-autosort)
@@ -492,11 +568,19 @@ CLOSED: [2017-12-10 Sun 19:40]
 ** Ideas                                                     :SKIP:NOEXPORT:
 :PROPERTIES:
 :SORT:     (todo-down)
+:HASH:     -766956050905729852
+:MODIFIED: 2018-03-14 10:38
 :END:
 *** TODO Sort only items, matching org search regex
+:PROPERTIES:
+:HASH:     -358945873056684613
+:MODIFIED: 2018-03-14 10:38
+:END:
 *** TODO should be able to define alias in sorting strategy
 :PROPERTIES:
 :CREATED:  [2017-12-18 Mon 20:58]
+:HASH:     -1647177683164312609
+:MODIFIED: 2018-03-14 10:38
 :END:
 :LOGBOOK:
 CLOCK: [2017-12-18 Mon 20:58]--[2017-12-18 Mon 20:59] =>  0:01
@@ -504,26 +588,43 @@ CLOCK: [2017-12-18 Mon 20:58]--[2017-12-18 Mon 20:59] =>  0:01
 *** TODO use local hook in autosort for toggle hooks
 :PROPERTIES:
 :CREATED:  [2017-12-20 Wed 15:23]
+:HASH:     1428464809521691313
+:MODIFIED: 2018-03-14 10:38
 :END:
 *** TODO add this functionality? [[http://sachachua.com/blog/2017/12/sorting-org-mode-lists-using-a-sequence-of-regular-expressions/][Sorting Org Mode lists using a sequence of regular expressions  13]] :COMMON:
 :PROPERTIES:
 :CREATED:  [2017-12-21 Thu 23:50]
 :Source:   http://sachachua.com/blog/2017/12/sorting-org-mode-lists-using-a-sequence-of-regular-expressions/
+:HASH:     1578782005593592066
+:MODIFIED: 2018-03-14 10:38
 :END:
 *** TODO Add trigger to not read lisp from sort property it is not safe
 :PROPERTIES:
 :CREATED:  [2017-12-25 Mon 22:05]
+:HASH:     250133019974117433
+:MODIFIED: 2018-03-14 10:38
 :END:
 *** TODO sort signalling error -resolve [[id:e9132d5f-cc43-4bae-b9ed-244e21e8b8cc][Test test]]
 :PROPERTIES:
 :CREATED: [2017-12-29 Fri 22:37]
+:HASH:     -1148790852781822314
+:MODIFIED: 2018-03-14 10:38
 :END:
 :LOGBOOK:
 CLOCK: [2017-12-29 Fri 22:37]--[2017-12-29 Fri 22:38] =>  0:01
 :END:
-** NEXT Versions                                                  :NOEXPORT:
+*** TODO Add trigger to not read lisp from sort property it is not safe
+:PROPERTIES:
+:CREATED:  [2017-12-25 Mon 22:05]
+:HASH:     -609557698841508991
+:MODIFIED: 2018-03-14 10:38
+:END:
+
+** NEXT Versions                                           :NOEXPORT:NOARCHIVE:
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:15]
+:HASH:     2008570112416165111
+:MODIFIED: 2018-03-14 10:38
 :END:
 :LOGBOOK:
 CLOCK: [2017-12-29 Fri 05:59]--[2017-12-29 Fri 06:00] =>  0:01
@@ -532,6 +633,8 @@ CLOCK: [2017-12-29 Fri 05:59]--[2017-12-29 Fri 06:00] =>  0:01
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:15]
 :ORDERED:  t
+:HASH:     1179384566686440137
+:MODIFIED: 2018-03-14 10:38
 :END:
 :LOGBOOK:
 CLOCK: [2017-12-29 Fri 05:50]--[2017-12-29 Fri 05:59] =>  0:09
@@ -546,31 +649,55 @@ CLOCK: [2017-12-29 Fri 05:50]--[2017-12-29 Fri 05:59] =>  0:09
 - interactive sort via subtree agenda invocation, similar to filtering
   <<v1.7>>
 *************** TODO Make it noweb refs, insert into files
+:PROPERTIES:
+:HASH:     -1974927656159786333
+:MODIFIED: 2018-03-14 10:38
+:END:
 *************** END
+:PROPERTIES:
+:HASH: -9745109
+:MODIFIED: 2018-03-14 10:38
+:END:
 
 **** NEXT [#A] 0.1
 SCHEDULED: <2018-01-13 Sat>
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:16]
+:HASH:     721357195698309999
+:MODIFIED: 2018-03-14 10:38
 :END:
 [[v1.1][specs]], [[v1.2][on open]]
 ***** DONE 0.10
 CLOSED: [2018-01-01 Mon 13:21]
 :PROPERTIES:
 :CREATED:  [2018-01-01 Mon 13:18]
+:HASH:     -65250588306529662
+:MODIFIED: 2018-03-14 10:38
 :END:
 :LOGBOOK:
 - State "DONE"       from              [2018-01-01 Mon 13:21]
 :END:
 ****** DONE allow to define sort criteria like a lisp function in the properties field
 CLOSED: [2017-12-12 Tue 21:18]
+:PROPERTIES:
+:HASH:     -1483242398069650076
+:MODIFIED: 2018-03-14 10:38
+:END:
 ****** CANCELLED Take care about exact position for =C-c C-c= (say, we are inside the table - user may not want to sort) :CANCELLED:
 CLOSED: [2017-12-11 Mon 16:56]
+:PROPERTIES:
+:HASH:     1022324466061557661
+:MODIFIED: 2018-03-14 10:38
+:END:
 :LOGBOOK:
 - State "CANCELLED"  from "TODO"          [2017-12-11 Mon 16:56]
 :END:
 ****** CANCELLED do not use org-sort, because it does not allow to combine sorts (i.e. sort by one criteria, if equal - by other) :CANCELLED:
 CLOSED: [2017-12-12 Tue 21:18]
+:PROPERTIES:
+:HASH:     157432453796936638
+:MODIFIED: 2018-03-14 10:38
+:END:
 :LOGBOOK:
 - State "CANCELLED"  from "TODO"          [2017-12-12 Tue 21:18] \\
   Made a proper wrapper
@@ -579,6 +706,8 @@ CLOSED: [2017-12-12 Tue 21:18]
 CLOSED: [2018-01-01 Mon 13:21]
 :PROPERTIES:
 :CREATED:  [2018-01-01 Mon 13:18]
+:HASH:     -65250588306529661
+:MODIFIED: 2018-03-14 10:38
 :END:
 :LOGBOOK:
 - State "DONE"       from              [2018-01-01 Mon 13:21]
@@ -587,19 +716,31 @@ CLOSED: [2018-01-01 Mon 13:21]
 CLOSED: [2017-12-25 Mon 21:59]
 :PROPERTIES:
 :CREATED:  [2017-12-18 Mon 20:57]
+:HASH:     1165210160655911693
+:MODIFIED: 2018-03-14 10:38
 :END:
 ****** DONE Handle nothing to sort
 CLOSED: [2017-12-11 Mon 16:56] SCHEDULED: <2017-12-11 Mon>
+:PROPERTIES:
+:HASH:     -450845540005726779
+:MODIFIED: 2018-03-14 10:38
+:END:
 :LOGBOOK:
 CLOCK: [2017-12-11 Mon 16:24]--[2017-12-11 Mon 16:56] =>  0:32
 CLOCK: [2017-12-11 Mon 15:58]--[2017-12-11 Mon 16:08] =>  0:10
 :END:
 ****** DONE make interactive versions of sorting functions
 CLOSED: [2017-12-25 Mon 21:59]
+:PROPERTIES:
+:HASH:     1793776178070947192
+:MODIFIED: 2018-03-14 10:38
+:END:
 ****** DONE rewrite sorting strategy to use assoc lists
 CLOSED: [2017-12-25 Mon 21:58]
 :PROPERTIES:
 :CREATED:  [2017-12-18 Mon 21:21]
+:HASH:     1028934983577673655
+:MODIFIED: 2018-03-14 10:38
 :END:
 :LOGBOOK:
 CLOCK: [2017-12-25 Mon 15:18]--[2017-12-25 Mon 21:58] =>  6:40
@@ -609,18 +750,26 @@ CLOCK: [2017-12-18 Mon 21:21]--[2017-12-18 Mon 21:25] =>  0:04
 CLOSED: [2017-12-25 Mon 22:00]
 :PROPERTIES:
 :CREATED:  [2017-12-23 Sat 11:21]
+:HASH:     -1066327795062730633
+:MODIFIED: 2018-03-14 10:38
 :END:
 ***** NEXT 0.12
 :PROPERTIES:
 :CREATED:  [2018-01-01 Mon 13:21]
+:HASH:     -1443030641378466250
+:MODIFIED: 2018-03-14 10:38
 :END:
 ****** TODO add hooks to to autosort
 :PROPERTIES:
 :CREATED:  [2017-12-18 Mon 09:56]
+:HASH:     -159645026411719802
+:MODIFIED: 2018-03-14 10:38
 :END:
 ****** NEXT get rid of annoying unfolding after =org-sort=
 :PROPERTIES:
 :CREATED:  [2017-12-18 Mon 20:54]
+:HASH:     -1873638373597939059
+:MODIFIED: 2018-03-14 10:38
 :END:
 :LOGBOOK:
 CLOCK: [2017-12-18 Mon 20:57]--[2017-12-18 Mon 20:58] =>  0:01
@@ -630,6 +779,8 @@ CLOCK: [2017-12-18 Mon 20:54]--[2017-12-18 Mon 20:57] =>  0:03
 **** TODO 0.2
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:16]
+:HASH:     -2204798971692895438
+:MODIFIED: 2018-03-14 10:38
 :END:
 :LOGBOOK:
 - State "TODO"       from "NEXT"          [2018-01-01 Mon 13:22]
@@ -638,38 +789,56 @@ CLOCK: [2017-12-18 Mon 20:54]--[2017-12-18 Mon 20:57] =>  0:03
 **** TODO 0.3
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:16]
+:HASH:     -1335599034948462101
+:MODIFIED: 2018-03-14 10:38
 :END:
 [[v1.6][adaptive sort update]]
 ***** TODO Share on reddit
 :PROPERTIES:
 :CREATED:  [2017-12-29 Fri 05:57]
+:HASH:     1365178058444158204
+:MODIFIED: 2018-03-14 10:38
 :END:
 **** TODO 0.4
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:16]
+:HASH:     1577374394320948883
+:MODIFIED: 2018-03-14 10:38
 :END:
 [[v1.7][interactive sort via agenda]]
 **** 0.5
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:16]
+:HASH:     1707946623873421111
+:MODIFIED: 2018-03-14 10:38
 :END:
 **** 0.6
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:16]
+:HASH:     1707946623873483575
+:MODIFIED: 2018-03-14 10:38
 :END:
 **** 0.7
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:16]
+:HASH:     1707946623873488695
+:MODIFIED: 2018-03-14 10:38
 :END:
 **** 0.8
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:16]
+:HASH:     1707946623873493815
+:MODIFIED: 2018-03-14 10:38
 :END:
 **** 0.9
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:16]
+:HASH:     1707946623873498935
+:MODIFIED: 2018-03-14 10:38
 :END:
 **** 1.0
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:16]
+:HASH:     1707946623864261431
+:MODIFIED: 2018-03-14 10:38
 :END:
