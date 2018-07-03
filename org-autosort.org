@@ -120,8 +120,7 @@ Default [[org-autosort-global-sorting-strategy][sorting strategy]] is
 
 ** NEXT Implementation                                     :NOEXPORT:NOARCHIVE:
 :PROPERTIES:
-:header-args: :tangle yes
-:HASH:     -1238412354080526388
+:header-args: :tangle yes 
 :MODIFIED: 2018-03-14 10:38
 :END:
 :LOGBOOK:
@@ -132,10 +131,10 @@ CLOCK: [2017-12-10 Sun 10:21]--[2017-12-10 Sun 11:02] =>  0:41
 CLOSED: [2017-12-11 Mon 15:58]
 :PROPERTIES:
 :ID:       3e603efc-e71a-4520-bcef-265cff481455
-:HASH:     1461856171498077217
 :MODIFIED: 2018-03-14 10:38
 :END:
-#+begin_src emacs-lisp
+- Here I use =:comments no= to make sure that the comment does not appear at the beginning of the file, which would prevent lexical binding from being activated.
+#+begin_src emacs-lisp :comments no
 ;;; org-autosort.el --- Sort entries in org files automatically -*- lexical-binding: t; -*-
 
 ;; Version: 0.11
@@ -660,7 +659,7 @@ CLOCK: [2017-12-29 Fri 05:50]--[2017-12-29 Fri 05:59] =>  0:09
 :END:
 
 **** NEXT [#A] 0.1
-SCHEDULED: <2018-01-13 Sat>
+SCHEDULED: <2018-06-23 Sat>
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:16]
 :HASH:     721357195698309999

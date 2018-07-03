@@ -1,4 +1,3 @@
-;; [[id:3e603efc-e71a-4520-bcef-265cff481455][Header:1]]
 ;;; org-autosort.el --- Sort entries in org files automatically -*- lexical-binding: t; -*-
 
 ;; Version: 0.11
@@ -14,7 +13,6 @@
 ;; The sorting order can be set globally through all the org files, locally in file, or locally in a subtree using :SORT: property.
 
 ;;; Code:
-;; Header:1 ends here
 
 ;; [[id:08e58824-f88a-4d3b-a79e-00a1514eb68a][Custom variables:1]]
 (defgroup org-autosort nil
