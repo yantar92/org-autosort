@@ -1,12 +1,11 @@
 #+AUTHORS: yantar92
 #+EMAIL: yantar92@gmail.com
 #+OPTIONS: tags:nil todo:nil num:nil
-#+PROPERTY: header-args :tangle no
+#+PROPERTY: header-args+ :tangle no
 
 * NEXT Automatic sorting of items in org mode                        :COMMON:
 :PROPERTIES:
-:HASH:     -672068472956142845
-:MODIFIED: 2018-03-14 10:38
+:ORG-TIME-BALANCE-MULTIPLIER: -0.2
 :END:
 :LOGBOOK:
 - State "NEXT"       from "NEXT"       [2018-01-01 Mon 13:31]
@@ -120,7 +119,7 @@ Default [[org-autosort-global-sorting-strategy][sorting strategy]] is
 
 ** NEXT Implementation                                     :NOEXPORT:NOARCHIVE:
 :PROPERTIES:
-:header-args: :tangle yes 
+:header-args+: :tangle yes 
 :MODIFIED: 2018-03-14 10:38
 :END:
 :LOGBOOK:
@@ -618,7 +617,6 @@ CLOCK: [2017-12-29 Fri 22:37]--[2017-12-29 Fri 22:38] =>  0:01
 :HASH:     -609557698841508991
 :MODIFIED: 2018-03-14 10:38
 :END:
-
 ** NEXT Versions                                           :NOEXPORT:NOARCHIVE:
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:15]
@@ -659,7 +657,6 @@ CLOCK: [2017-12-29 Fri 05:50]--[2017-12-29 Fri 05:59] =>  0:09
 :END:
 
 **** NEXT [#A] 0.1
-SCHEDULED: <2018-07-14 Sat>
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:16]
 :HASH:     721357195698309999
@@ -753,6 +750,7 @@ CLOSED: [2017-12-25 Mon 22:00]
 :MODIFIED: 2018-03-14 10:38
 :END:
 ***** NEXT 0.12
+SCHEDULED: <2018-07-17 Tue>
 :PROPERTIES:
 :CREATED:  [2018-01-01 Mon 13:21]
 :HASH:     -1443030641378466250
@@ -785,6 +783,10 @@ CLOCK: [2017-12-18 Mon 20:54]--[2017-12-18 Mon 20:57] =>  0:03
 - State "TODO"       from "NEXT"          [2018-01-01 Mon 13:22]
 :END:
 [[v1.3][interactive in place]],[[v1.4][list sort]], [[v1.5][comparison list]]
+***** TODO Change =org-map-entries= to faster function
+:PROPERTIES:
+:CREATED:  [2018-09-12 Wed 23:20]
+:END:
 **** TODO 0.3
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:16]
