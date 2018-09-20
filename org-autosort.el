@@ -38,7 +38,7 @@
 					  (todo-down . (:key org-get-todo-state :cmp (lambda (a b)
 										       (not (org-autosort-custom-cmp-todo a b)))))
 					  ;;					  
-					  (text-up . (:key org-autosort-get:cmp :cmp string<))
+					  (text-up . (:key org-autosort-get-text :cmp string<))
 					  (text-down . (:key org-autosort-get-text :cmp string>))
                                           (priority-up . (:key (org-autosort-get-property "PRIORITY") :cmp string<))
                                           (priority-down . (:key (org-autosort-get-property "PRIORITY") :cmp string>)))
@@ -89,22 +89,17 @@ nil means that no sorting should be done by default."
 ;; [[id:51552471-6f2b-4792-a8a3-b4bb0d3618d8][by property:1]]
 (defun org-autosort-get-property (property)
   "Get the value of PROPERTY for sorting."
-  (org-entry-get (point)
-		 property
-		 'selective))
+  (org-entry-get (point) property 'selective))
 ;; by property:1 ends here
 
 ;; [[id:0d4d78c1-a4a2-4091-8142-ea9e70434d73][By todo keyword:1]]
 (defun org-autosort-get-todo ()
   "Get the value of todo keyword for sorting." ; stolen from org-sort-entries in org.el
   (let* ((m (org-get-todo-state))
-	 (s (if (member m
-			org-done-keywords) '- '+))
-	 )
-    (- 99
-       (funcall s
-		(length (member m
-				org-todo-keywords-1))))))
+	 (s (if (member m org-done-keywords)
+		'- '+)))
+    (- 99 (funcall s
+		   (length (member m org-todo-keywords-1))))))
 ;; By todo keyword:1 ends here
 
 ;; [[id:87e5b164-fe1f-4618-9b07-741c27e37bc0][By todo keyword, custom:1]]
@@ -116,11 +111,9 @@ nil means that no sorting should be done by default."
   "Compare todo keywords A and B.  Return non nil if A<B."
   (let* ((todo-cmp-orgder (or org-autosort-todo-cmp-order
 			      org-todo-keywords-1))
-	 (posa (or (seq-position org-autosort-todo-cmp-order
-				 a)
+	 (posa (or (seq-position org-autosort-todo-cmp-order a)
 		   0))
-	 (posb (or (seq-position org-autosort-todo-cmp-order
-				 b)
+	 (posb (or (seq-position org-autosort-todo-cmp-order b)
 		   0)))
     (< posa posb)))
 ;; By todo keyword, custom:1 ends here
@@ -128,8 +121,7 @@ nil means that no sorting should be done by default."
 ;; [[id:5205ed5d-cb92-4711-86b7-c2bf9549f0f5][Alphabetic:1]]
 (defun org-autosort-get-text ()
   "Get the text or tags (if text is empty) of the current entry."
-  (nth 4 (org-heading-components))
-  )
+  (nth 4 (org-heading-components)))
 ;; Alphabetic:1 ends here
 
 ;; [[id:7b077f97-a744-4197-9b4f-015af71ab95f][General sorting routine:1]]
@@ -155,7 +147,7 @@ nil means that no sorting should be done by default."
     (_ nil)))
 
 (defun org-autosort-sorting-strategyp (sorting-strategy)
-  "Validate if SORTING-STRATEGY is a valid and return it.
+  "Validate if SORTING-STRATEGY is valid and return it.
 The strategy is ensured to be a list.
 Signal user error and return nil if argument is not a sorting strategy."
   (if (not sorting-strategy)
@@ -247,14 +239,17 @@ This function returns a list of sorting keys."
   "Run `org-sort-entries' at point with ARGS if nesessary.
 Make sure, folding state is not changed."
   (when (org-autosort-get-sorting-strategy)
-    (save-excursion
-      (save-restriction
-	(condition-case err
-	    (apply #'org-sort-entries args)
-	  (user-error
-	   (unless (string-match-p "Nothing to sort"
-				   (error-message-string err))
-	     (signal (car err) (cdr err)))))))))
+    (let ((subtree-end (save-excursion (org-end-of-subtree)))
+	  (next-heading (save-excursion (outline-next-heading))))
+      (when (< next-heading subtree-end)
+	(save-excursion
+	  (save-restriction
+	    (condition-case err
+		(apply #'org-sort-entries args)
+	      (user-error
+	       (unless (string-match-p "Nothing to sort"
+				       (error-message-string err))
+		 (signal (car err) (cdr err)))))))))))
 
 (defun org-autosort-sort-entries-at-point-nonrecursive ()
   "Sort org-entries at point nonrecursively."

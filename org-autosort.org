@@ -448,14 +448,17 @@ This function returns a list of sorting keys."
   "Run `org-sort-entries' at point with ARGS if nesessary.
 Make sure, folding state is not changed."
   (when (org-autosort-get-sorting-strategy)
-    (save-excursion
-      (save-restriction
-	(condition-case err
-	    (apply #'org-sort-entries args)
-	  (user-error
-	   (unless (string-match-p "Nothing to sort"
-				   (error-message-string err))
-	     (signal (car err) (cdr err)))))))))
+    (let ((subtree-end (save-excursion (org-end-of-subtree)))
+	  (next-heading (save-excursion (outline-next-heading))))
+      (when (< next-heading subtree-end)
+	(save-excursion
+	  (save-restriction
+	    (condition-case err
+		(apply #'org-sort-entries args)
+	      (user-error
+	       (unless (string-match-p "Nothing to sort"
+				       (error-message-string err))
+		 (signal (car err) (cdr err)))))))))))
 
 (defun org-autosort-sort-entries-at-point-nonrecursive ()
   "Sort org-entries at point nonrecursively."
