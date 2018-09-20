@@ -155,7 +155,7 @@ Signal user error and return nil if argument is not a sorting strategy."
     (or (let ((res (org-autosort-sorting-strategy-elementp sorting-strategy)))
 	  (if res (list res)))
 	(let* ((testresult (mapcar (lambda (elm) (cons (org-autosort-sorting-strategy-elementp elm)
-						  elm))
+						       elm))
 				   sorting-strategy))
 	       (err-elm (alist-get nil testresult 'none)))
 	  (if (equal err-elm 'none)
@@ -230,7 +230,7 @@ This function returns a list of sorting keys."
 			(not (seq-empty-p resultlist)))
 	      (let ((elem (pop resultlist)))
 		(unless (and (car elem)
-			   (cdr elem)) ; not equal
+			     (cdr elem)) ; not equal
 		  (setq done t)
 		  (setq result (car elem)))))
 	    result))))))
@@ -264,17 +264,17 @@ Make sure, folding state is not changed."
   (interactive)
   (condition-case err
       (org-map-entries (lambda nil (funcall #'org-autosort-org-sort-entries-wrapper
-				     nil ?f
-				     (org-autosort-construct-get-value-function)
-				     (org-autosort-construct-cmp-function)))
+				       nil ?f
+				       (org-autosort-construct-get-value-function)
+				       (org-autosort-construct-cmp-function)))
 		       nil 'tree)
     (error
      (if (string-match-p "Before first headline at position"
 			 (error-message-string err))
 	 (org-map-entries (lambda nil (funcall #'org-autosort-org-sort-entries-wrapper
-					nil ?f
-					(org-autosort-construct-get-value-function)
-					(org-autosort-construct-cmp-function)))
+					  nil ?f
+					  (org-autosort-construct-get-value-function)
+					  (org-autosort-construct-cmp-function)))
 			  nil 'file)
        (signal (car err) (cdr err))))))
 
@@ -282,17 +282,21 @@ Make sure, folding state is not changed."
   "Sort org entries at point.
 Sort recursively if invoked with \\[universal-argument]."
   (interactive "P")
-  (if (equal ARG '(4))
-      (org-autosort-sort-entries-at-point-recursive)
-    (org-autosort-sort-entries-at-point-nonrecursive)))
+  (let ((org-cycle-initial-status org-cycle-subtree-status))
+    (if (equal ARG '(4))
+	(org-autosort-sort-entries-at-point-recursive)
+      (org-autosort-sort-entries-at-point-nonrecursive))
+    (org-cycle);; needed to hide the unfolded PROPERTY drawers after sorting
+    (while (not (eq org-cycle-initial-status org-cycle-subtree-status))
+      (org-cycle))))
 
 (defun org-autosort-sort-entries-in-file ()
   "Sort all entries in the file recursively."
   (interactive)
   (org-map-entries (lambda nil (funcall #'org-autosort-org-sort-entries-wrapper
-				 nil ?f
-				 (org-autosort-construct-get-value-function)
-				 (org-autosort-construct-cmp-function)))
+				   nil ?f
+				   (org-autosort-construct-get-value-function)
+				   (org-autosort-construct-cmp-function)))
 		   nil 'file))
 
 (defun org-autosort-sort-entries-in-file-maybe ()
