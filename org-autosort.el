@@ -240,7 +240,8 @@ This function returns a list of sorting keys."
 Make sure, folding state is not changed."
   (when (org-autosort-get-sorting-strategy)
     (let ((subtree-end (save-excursion (org-end-of-subtree)))
-	  (next-heading (save-excursion (outline-next-heading))))
+	  (next-heading (save-excursion (or (outline-next-heading)
+					    (end-of-buffer)))))
       (when (< next-heading subtree-end)
 	(save-excursion
 	  (save-restriction

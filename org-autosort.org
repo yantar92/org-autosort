@@ -8,6 +8,7 @@
 :ORG-TIME-BALANCE-MULTIPLIER: -0.2
 :END:
 :LOGBOOK:
+CLOCK: [2018-09-20 Thu 15:53]
 CLOCK: [2018-09-20 Thu 14:47]--[2018-09-20 Thu 15:31] =>  0:44
 - State "NEXT"       from "NEXT"       [2018-01-01 Mon 13:31]
 - State "NEXT"       from "NEXT"       [2018-01-01 Mon 13:21]
@@ -449,7 +450,8 @@ This function returns a list of sorting keys."
 Make sure, folding state is not changed."
   (when (org-autosort-get-sorting-strategy)
     (let ((subtree-end (save-excursion (org-end-of-subtree)))
-	  (next-heading (save-excursion (outline-next-heading))))
+	  (next-heading (save-excursion (or (outline-next-heading)
+					    (end-of-buffer)))))
       (when (< next-heading subtree-end)
 	(save-excursion
 	  (save-restriction
@@ -586,12 +588,6 @@ CLOCK: [2017-12-29 Fri 05:50]--[2017-12-29 Fri 05:59] =>  0:09
 - update the sort on changes, including creating new entries <<v1.6>>
 - interactive sort via subtree agenda invocation, similar to filtering
   <<v1.7>>
-*************** TODO Make it noweb refs, insert into files
-:PROPERTIES:
-:END:
-*************** END
-:PROPERTIES:
-:END:
 
 **** NEXT [#A] 0.1
 :PROPERTIES:
@@ -669,20 +665,21 @@ SCHEDULED: <2018-07-17 Tue>
 :PROPERTIES:
 :CREATED:  [2018-01-01 Mon 13:21]
 :END:
-****** TODO add hooks to to autosort
-:PROPERTIES:
-:CREATED:  [2017-12-18 Mon 09:56]
-:END:
-****** NEXT get rid of annoying unfolding after =org-sort=
+****** DONE get rid of annoying unfolding after =org-sort=
+CLOSED: [2018-09-20 Thu 15:47]
 :PROPERTIES:
 :CREATED:  [2017-12-18 Mon 20:54]
 :END:
 :LOGBOOK:
-CLOCK: [2018-09-20 Thu 15:31]
+- State "DONE"       from "NEXT"       [2018-09-20 Thu 15:47]
+CLOCK: [2018-09-20 Thu 15:31]--[2018-09-20 Thu 15:47] =>  0:16
 CLOCK: [2017-12-18 Mon 20:57]--[2017-12-18 Mon 20:58] =>  0:01
 CLOCK: [2017-12-18 Mon 20:54]--[2017-12-18 Mon 20:57] =>  0:03
 :END:
-
+****** TODO add hooks to to autosort
+:PROPERTIES:
+:CREATED:  [2017-12-18 Mon 09:56]
+:END:
 **** TODO 0.2
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:16]
