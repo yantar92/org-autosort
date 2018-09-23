@@ -241,7 +241,7 @@ Make sure, folding state is not changed."
   (when (org-autosort-get-sorting-strategy)
     (let ((subtree-end (save-excursion (org-end-of-subtree)))
 	  (next-heading (save-excursion (or (outline-next-heading)
-					    (end-of-buffer)))))
+					    (buffer-end +1)))))
       (when (< next-heading subtree-end)
 	(save-excursion
 	  (save-restriction
