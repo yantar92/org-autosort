@@ -499,7 +499,7 @@ Sort recursively if invoked with \\[universal-argument]."
       (org-autosort-sort-entries-at-point-recursive)
     (org-autosort-sort-entries-at-point-nonrecursive))
   (org-cycle);; needed to hide the unfolded PROPERTY drawers after sorting
-  (while (not (eq org-cycle-initial-status 'children)) ;; magic constant...
+  (while (not (eq org-cycle-subtree-status 'children)) ;; magic constant...
     (org-cycle)))
 
 (defun org-autosort-sort-entries-in-file ()
