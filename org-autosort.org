@@ -495,13 +495,12 @@ Make sure, folding state is not changed."
   "Sort org entries at point.
 Sort recursively if invoked with \\[universal-argument]."
   (interactive "P")
-  (let ((org-cycle-initial-status org-cycle-subtree-status))
-    (if (equal ARG '(4))
-	(org-autosort-sort-entries-at-point-recursive)
-      (org-autosort-sort-entries-at-point-nonrecursive))
-    (org-cycle);; needed to hide the unfolded PROPERTY drawers after sorting
-    (while (not (eq org-cycle-initial-status org-cycle-subtree-status))
-      (org-cycle))))
+  (if (equal ARG '(4))
+      (org-autosort-sort-entries-at-point-recursive)
+    (org-autosort-sort-entries-at-point-nonrecursive))
+  (org-cycle);; needed to hide the unfolded PROPERTY drawers after sorting
+  (while (not (eq org-cycle-initial-status 'children)) ;; magic constant...
+    (org-cycle)))
 
 (defun org-autosort-sort-entries-in-file ()
   "Sort all entries in the file recursively."
