@@ -41,7 +41,9 @@
 					  (text-up . (:key org-autosort-get-text :cmp string<))
 					  (text-down . (:key org-autosort-get-text :cmp string>))
                                           (priority-up . (:key (org-autosort-get-property "PRIORITY") :cmp string<))
-                                          (priority-down . (:key (org-autosort-get-property "PRIORITY") :cmp string>)))
+                                          (priority-down . (:key (org-autosort-get-property "PRIORITY") :cmp string>))
+                                          (inactive-timestamp-up . (:key org-autosort-get-inactive-timestamp :cmp time-less-p))
+					  (inactive-timestamp-down . (:key org-autosort-get-inactive-timestamp :cmp (lambda (a b) (time-less-p b a)))))
   "Alist, defining aliases to sorting rules.
 Each value in the list defines a sorting rule.
 The rule is a property list with :key and :cmp properties.
@@ -123,6 +125,22 @@ nil means that no sorting should be done by default."
   "Get the text or tags (if text is empty) of the current entry."
   (nth 4 (org-heading-components)))
 ;; Alphabetic:1 ends here
+
+;; [[id:46525723-2950-4cf9-9f84-12cd9ee8f67e][By first inactive timestamp:1]]
+(defun org-autosort-get-inactive-timestamp ()
+  "Get the first inactive timestamp of the entry."
+  (when (re-search-forward (org-re-timestamp 'inactive) (save-excursion
+							  (outline-next-heading))
+			   't)
+    (goto-char (match-beginning 0))
+    (let* ((timestamp (cadr (org-element-timestamp-parser)))
+	   (year (plist-get timestamp :year-start))
+           (month (plist-get timestamp :month-start))
+           (day (plist-get timestamp :day-start))
+           (hour (plist-get timestamp :hour-start))
+           (minute (plist-get timestamp :minute-start)))
+      (encode-time 0 (or minute 0) (or hour 0) day month year))))
+;; By first inactive timestamp:1 ends here
 
 ;; [[id:7b077f97-a744-4197-9b4f-015af71ab95f][General sorting routine:1]]
 (defun org-autosort-sorting-strategy-elementp (elm)
