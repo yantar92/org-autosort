@@ -281,21 +281,25 @@ Make sure, folding state is not changed."
 (defun org-autosort-sort-entries-at-point-recursive ()
   "Sort org-entries at point recursively."
   (interactive)
-  (condition-case err
-      (org-map-entries (lambda nil (funcall #'org-autosort-org-sort-entries-wrapper
-				       nil ?f
-				       (org-autosort-construct-get-value-function)
-				       (org-autosort-construct-cmp-function)))
-		       nil 'tree)
-    (error
-     (if (string-match-p "Before first headline at position"
-			 (error-message-string err))
-	 (org-map-entries (lambda nil (funcall #'org-autosort-org-sort-entries-wrapper
-					  nil ?f
-					  (org-autosort-construct-get-value-function)
-					  (org-autosort-construct-cmp-function)))
-			  nil 'file)
-       (signal (car err) (cdr err))))))
+  (save-excursion
+    (let ((subtree-end))
+      (condition-case err
+	  (org-back-to-heading)
+	(error
+	 (if (string-match-p "Before first headline at position"
+			     (error-message-string err))
+	     (progn
+               (outline-next-heading)
+	       (setq subtree-end (point-max)))
+	   (signal (car err) (cdr err)))))
+      (setq subtree-end (or subtree-end
+			    (save-excursion (org-end-of-subtree))))
+      (while (< (point) subtree-end)
+	(funcall #'org-autosort-org-sort-entries-wrapper
+		 nil ?f
+		 (org-autosort-construct-get-value-function)
+		 (org-autosort-construct-cmp-function))
+	(outline-next-heading)))))
 
 (defun org-autosort-sort-entries-at-point (&optional ARG)
   "Sort org entries at point.
@@ -312,11 +316,16 @@ Sort recursively if invoked with \\[universal-argument]."
 (defun org-autosort-sort-entries-in-file ()
   "Sort all entries in the file recursively."
   (interactive)
-  (org-map-entries (lambda nil (funcall #'org-autosort-org-sort-entries-wrapper
-				   nil ?f
-				   (org-autosort-construct-get-value-function)
-				   (org-autosort-construct-cmp-function)))
-		   nil 'file))
+  (save-excursion
+    (beginning-of-buffer)
+    (let ((subtree-end (point-max)))
+      (while (< (point) subtree-end)
+	(funcall #'org-autosort-org-sort-entries-wrapper
+		 nil ?f
+		 (org-autosort-construct-get-value-function)
+		 (org-autosort-construct-cmp-function))
+	(outline-next-heading)))
+    (outline-hide-sublevels 1)))
 
 (defun org-autosort-sort-entries-in-file-maybe ()
   "Sort all entries in the file recursively if `org-autosort-sort-at-file-open' is not nil."

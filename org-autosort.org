@@ -225,6 +225,7 @@ nil means that no sorting should be done by default."
 :ID:       c478d941-ddbf-49cc-b38c-a03c33779817
 :END:
 :LOGBOOK:
+CLOCK: [2018-10-07 Sun 16:30]--[2018-10-07 Sun 16:31] =>  0:01
 CLOCK: [2018-09-20 Thu 14:44]--[2018-09-20 Thu 14:46] =>  0:02
 CLOCK: [2017-12-18 Mon 20:59]--[2017-12-18 Mon 21:21] =>  0:22
 CLOCK: [2017-12-10 Sun 17:08]--[2017-12-10 Sun 17:13] =>  0:05
@@ -297,14 +298,15 @@ CLOCK: [2017-12-18 Mon 20:33]--[2017-12-18 Mon 20:50] =>  0:17
   "Get the text or tags (if text is empty) of the current entry."
   (nth 4 (org-heading-components)))
 #+END_SRC
-**** NEXT By first inactive timestamp
-SCHEDULED: <2018-09-21 Fri>
+**** DONE By first inactive timestamp
+CLOSED: [2018-10-07 Sun 16:30] SCHEDULED: <2018-09-21 Fri>
 :PROPERTIES:
 :SHOWFROMDATE: 2018-09-21 18:00
 :ID:       46525723-2950-4cf9-9f84-12cd9ee8f67e
 :END:
 :LOGBOOK:
-CLOCK: [2018-10-07 Sun 15:40]
+- State "DONE"       from "NEXT"       [2018-10-07 Sun 16:30]
+CLOCK: [2018-10-07 Sun 15:40]--[2018-10-07 Sun 16:30] =>  0:50
 - State "NEXT"       from "TODO"       [2018-09-20 Thu 14:51]
 :END:
 #+BEGIN_SRC emacs-lisp
@@ -494,21 +496,25 @@ Make sure, folding state is not changed."
 (defun org-autosort-sort-entries-at-point-recursive ()
   "Sort org-entries at point recursively."
   (interactive)
-  (condition-case err
-      (org-map-entries (lambda nil (funcall #'org-autosort-org-sort-entries-wrapper
-				       nil ?f
-				       (org-autosort-construct-get-value-function)
-				       (org-autosort-construct-cmp-function)))
-		       nil 'tree)
-    (error
-     (if (string-match-p "Before first headline at position"
-			 (error-message-string err))
-	 (org-map-entries (lambda nil (funcall #'org-autosort-org-sort-entries-wrapper
-					  nil ?f
-					  (org-autosort-construct-get-value-function)
-					  (org-autosort-construct-cmp-function)))
-			  nil 'file)
-       (signal (car err) (cdr err))))))
+  (save-excursion
+    (let ((subtree-end))
+      (condition-case err
+	  (org-back-to-heading)
+	(error
+	 (if (string-match-p "Before first headline at position"
+			     (error-message-string err))
+	     (progn
+               (outline-next-heading)
+	       (setq subtree-end (point-max)))
+	   (signal (car err) (cdr err)))))
+      (setq subtree-end (or subtree-end
+			    (save-excursion (org-end-of-subtree))))
+      (while (< (point) subtree-end)
+	(funcall #'org-autosort-org-sort-entries-wrapper
+		 nil ?f
+		 (org-autosort-construct-get-value-function)
+		 (org-autosort-construct-cmp-function))
+	(outline-next-heading)))))
 
 (defun org-autosort-sort-entries-at-point (&optional ARG)
   "Sort org entries at point.
@@ -525,11 +531,16 @@ Sort recursively if invoked with \\[universal-argument]."
 (defun org-autosort-sort-entries-in-file ()
   "Sort all entries in the file recursively."
   (interactive)
-  (org-map-entries (lambda nil (funcall #'org-autosort-org-sort-entries-wrapper
-				   nil ?f
-				   (org-autosort-construct-get-value-function)
-				   (org-autosort-construct-cmp-function)))
-		   nil 'file))
+  (save-excursion
+    (beginning-of-buffer)
+    (let ((subtree-end (point-max)))
+      (while (< (point) subtree-end)
+	(funcall #'org-autosort-org-sort-entries-wrapper
+		 nil ?f
+		 (org-autosort-construct-get-value-function)
+		 (org-autosort-construct-cmp-function))
+	(outline-next-heading)))
+    (outline-hide-sublevels 1)))
 
 (defun org-autosort-sort-entries-in-file-maybe ()
   "Sort all entries in the file recursively if `org-autosort-sort-at-file-open' is not nil."
@@ -718,14 +729,19 @@ CLOSED: [2018-09-20 Thu 15:59]
 :CREATED:  [2017-12-28 Thu 23:16]
 :END:
 :LOGBOOK:
+CLOCK: [2018-10-07 Sun 16:54]
 - State "NEXT"       from "TODO"       [2018-09-20 Thu 22:17]
 - State "TODO"       from "NEXT"          [2018-01-01 Mon 13:22]
 :END:
 [[v1.3][interactive in place]],[[v1.4][list sort]], [[v1.5][comparison list]]
-***** NEXT [#C] Change =org-map-entries= to faster function
-SCHEDULED: <2018-09-22 Sat>
+***** DONE [#C] Change =org-map-entries= to faster function
+CLOSED: [2018-10-07 Sun 16:54] SCHEDULED: <2018-09-22 Sat>
 :PROPERTIES:
 :CREATED:  [2018-09-12 Wed 23:20]
+:END:
+:LOGBOOK:
+- State "DONE"       from "NEXT"       [2018-10-07 Sun 16:54]
+CLOCK: [2018-10-07 Sun 16:33]--[2018-10-07 Sun 16:54] =>  0:21
 :END:
 **** TODO 0.3
 :PROPERTIES:
