@@ -324,8 +324,12 @@ CLOCK: [2018-10-07 Sun 15:40]--[2018-10-07 Sun 16:30] =>  0:50
            (minute (plist-get timestamp :minute-start)))
       (encode-time 0 (or minute 0) (or hour 0) day month year))))
 #+END_SRC
-**** TODO By deadline
+**** NEXT By deadline
+SCHEDULED: <2019-02-02 Sat>
 :PROPERTIES:
+:END:
+:LOGBOOK:
+- State "NEXT"       from "TODO"       [2018-10-08 Mon 13:49]
 :END:
 **** TODO By clocking time
 :PROPERTIES:
@@ -596,6 +600,27 @@ CLOCK: [2017-12-29 Fri 22:37]--[2017-12-29 Fri 22:38] =>  0:01
 :PROPERTIES:
 :CREATED:  [2017-12-25 Mon 22:05]
 :END:
+*** TODO it appears that it attempts to sort something here: [[file:~/.emacs.d/config.org]]. Should not be the case
+:PROPERTIES:
+:CREATED: [2018-10-14 Sun 00:07]
+:END:
+:LOGBOOK:
+CLOCK: [2018-10-14 Sun 00:07]--[2018-10-14 Sun 00:08] =>  0:01
+:END:
+*** TODO Add an option to sort by an regexp - the entries matching regexp are shown first
+:PROPERTIES:
+:CREATED:  [2018-10-20 Sat 16:46]
+:END:
+*** NEXT [#A] reply to this about org-autosort email |- Maikol Solís <notifications@github.com>: [yantar92/org-autosort] Upload to MELPA (#2) :EMAIL:
+SCHEDULED: <2019-03-02 Sat>
+:PROPERTIES:
+:CREATED: [2019-02-28 Thu 09:15]
+:EMAIL-SOURCE: notmuch:id:yantar92/org-autosort/issues/2@github.com
+:END:
+:LOGBOOK:
+- State "NEXT"       from "TODO"       [2019-02-28 Thu 09:15]
+:END:
+[2019-02-28 Thu 09:15]
 ** NEXT Versions                                           :NOEXPORT:NOARCHIVE:
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:15]
@@ -615,8 +640,6 @@ CLOCK: [2017-12-29 Fri 05:50]--[2017-12-29 Fri 05:59] =>  0:09
 - sort entries in file on open <<v1.2>>
 - sort entries in place <<v1.3>>
 - sort lists <<v1.4>>
-- construct comparison function with the list of items/regex, which
-  should be placed on the top no matter what <<v1.5>>
 - update the sort on changes, including creating new entries <<v1.6>>
 - interactive sort via subtree agenda invocation, similar to filtering
   <<v1.7>>
@@ -729,11 +752,11 @@ CLOSED: [2018-09-20 Thu 15:59]
 :CREATED:  [2017-12-28 Thu 23:16]
 :END:
 :LOGBOOK:
-CLOCK: [2018-10-07 Sun 16:54]
+CLOCK: [2018-10-07 Sun 16:54]--[2018-10-07 Sun 16:56] =>  0:02
 - State "NEXT"       from "TODO"       [2018-09-20 Thu 22:17]
 - State "TODO"       from "NEXT"          [2018-01-01 Mon 13:22]
 :END:
-[[v1.3][interactive in place]],[[v1.4][list sort]], [[v1.5][comparison list]]
+[[v1.3][interactive in place]],[[v1.4][list sort]]
 ***** DONE [#C] Change =org-map-entries= to faster function
 CLOSED: [2018-10-07 Sun 16:54] SCHEDULED: <2018-09-22 Sat>
 :PROPERTIES:
@@ -743,6 +766,14 @@ CLOSED: [2018-10-07 Sun 16:54] SCHEDULED: <2018-09-22 Sat>
 - State "DONE"       from "NEXT"       [2018-10-07 Sun 16:54]
 CLOCK: [2018-10-07 Sun 16:33]--[2018-10-07 Sun 16:54] =>  0:21
 :END:
+***** NEXT sort lists
+SCHEDULED: <2019-02-02 Sat>
+      :PROPERTIES:
+      :CREATED:  [2018-10-08 Mon 13:50]
+      :END:
+      :LOGBOOK:
+      - State "NEXT"       from "TODO"       [2018-10-08 Mon 13:51]
+      :END:
 **** TODO 0.3
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:16]
