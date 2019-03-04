@@ -1,11 +1,27 @@
 ;;; org-autosort.el --- Sort entries in org files automatically -*- lexical-binding: t; -*-
 
+;; Copyright (C) 2017-2019 Ihor Radchenko
+
 ;; Version: 0.11
 ;; Author: Ihor Radchenko <yantar92@gmail.com>
 ;; Created: 10 Dec 2017
 ;; Keywords: matching, outlines
 ;; Homepage: https://github.com/yantar92/org-autosort
 ;; Package-Requires: (org)
+
+;; This file is not part of GNU Emacs.
+
+;;
+;; This program is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License as
+;; published by the Free Software Foundation; either version 2, or
+;; (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;; General Public License for more details.
+;;
 
 ;;; Commentary:
 
@@ -143,6 +159,17 @@ nil means that no sorting should be done by default."
 ;; By first inactive timestamp:1 ends here
 
 ;; [[id:7b077f97-a744-4197-9b4f-015af71ab95f][General sorting routine:1]]
+(defun org-autosort--org-back-to-heading ()
+  "Back to current heading or move to the first heading if before the first heading."
+  (when (eq major-mode 'org-mode)
+    (condition-case err
+	(org-back-to-heading)
+      (error
+       (if (string-match-p "Before first headline at position"
+			   (error-message-string err))
+           (outline-next-heading)
+	 (signal (car err) (cdr err)))))))
+
 (defun org-autosort-sorting-strategy-elementp (elm)
   "Validate element ELM of sorting strategy.  Return (:key ... [:cmp ...]) if element and nil otherwise."
   (pcase elm
@@ -173,7 +200,7 @@ Signal user error and return nil if argument is not a sorting strategy."
     (or (let ((res (org-autosort-sorting-strategy-elementp sorting-strategy)))
 	  (if res (list res)))
 	(let* ((testresult (mapcar (lambda (elm) (cons (org-autosort-sorting-strategy-elementp elm)
-						       elm))
+						  elm))
 				   sorting-strategy))
 	       (err-elm (alist-get nil testresult 'none)))
 	  (if (equal err-elm 'none)
@@ -184,18 +211,20 @@ Signal user error and return nil if argument is not a sorting strategy."
 
 (defun org-autosort-get-sorting-strategy ()
   "Get sorting strategy at point for the current entry's subtree being sorted."
-  (let ((property (org-entry-get (point) "SORT" 'selective)))
-    (pcase property
-      ('t (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy))
-      ('nil (and org-autosort-sort-all
-		 (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy)))
-      ("" nil)
-      ('none nil)
-      (_ (if (= (cdr (read-from-string property))
-		(length property))
-	     (org-autosort-sorting-strategyp (car (read-from-string property)))
-	   (user-error "Cannot read :SORT: property: \"%s\" in buffer: %s" property (buffer-name))
-	   nil)))))
+  (save-excursion
+    (org-autosort--org-back-to-heading)
+    (let ((property (org-entry-get (point) "SORT" 'selective)))
+      (pcase property
+	('t (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy))
+	('nil (and org-autosort-sort-all
+		   (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy)))
+	("" nil)
+	('none nil)
+	(_ (if (= (cdr (read-from-string property))
+		  (length property))
+	       (org-autosort-sorting-strategyp (car (read-from-string property)))
+	     (user-error "Cannot read :SORT: property: \"%s\" in buffer: %s" property (buffer-name))
+	     nil))))))
 
 (defun org-autosort-construct-get-value-function-atom (sorting-strategy-elm)
   "Construct get-value function for single element of sorting strategy (SORTING-STRATEGY-ELM)."
@@ -256,19 +285,21 @@ This function returns a list of sorting keys."
 (defun org-autosort-org-sort-entries-wrapper (&rest args)
   "Run `org-sort-entries' at point with ARGS if nesessary.
 Make sure, folding state is not changed."
-  (when (org-autosort-get-sorting-strategy)
-    (let ((subtree-end (save-excursion (org-end-of-subtree)))
-	  (next-heading (save-excursion (or (outline-next-heading)
-					    (buffer-end +1)))))
-      (when (< next-heading subtree-end)
-	(save-excursion
-	  (save-restriction
-	    (condition-case err
-		(apply #'org-sort-entries args)
-	      (user-error
-	       (unless (string-match-p "Nothing to sort"
-				       (error-message-string err))
-		 (signal (car err) (cdr err)))))))))))
+  (save-excursion
+    (org-autosort--org-back-to-heading)
+    (when (org-autosort-get-sorting-strategy)
+      (let ((subtree-end (save-excursion (org-end-of-subtree)))
+	    (next-heading (save-excursion (or (outline-next-heading)
+					      (buffer-end +1)))))
+	(when (< next-heading subtree-end)
+	  (save-excursion
+	    (save-restriction
+	      (condition-case err
+		  (apply #'org-sort-entries args)
+		(user-error
+		 (unless (string-match-p "Nothing to sort"
+					 (error-message-string err))
+		   (signal (car err) (cdr err))))))))))))
 
 (defun org-autosort-sort-entries-at-point-nonrecursive ()
   "Sort org-entries at point nonrecursively."
@@ -324,7 +355,17 @@ Sort recursively if invoked with \\[universal-argument]."
 		 nil ?f
 		 (org-autosort-construct-get-value-function)
 		 (org-autosort-construct-cmp-function))
-	(outline-next-heading)))
+	(outline-next-heading)
+        ;; optimise large files with many entries
+        (unless org-autosort-sort-all
+          (and
+	   (search-forward ":SORT:" subtree-end 'noerror)
+           (while (and (< (point) subtree-end)
+		       (save-excursion
+			 (re-search-backward org-property-start-re (save-excursion (org-back-to-heading)) t)
+                         (looking-at org-property-drawer-re))
+                       (not (string-match ":SORT:" (match-string 0))))
+             (search-forward ":SORT:" subtree-end 'noerror))))))
     (outline-hide-sublevels 1)))
 
 (defun org-autosort-sort-entries-in-file-maybe ()
