@@ -213,6 +213,9 @@ Signal user error and return nil if argument is not a sorting strategy."
   "Get sorting strategy at point for the current entry's subtree being sorted."
   (save-excursion
     (org-autosort--org-back-to-heading)
+    (condition-case err
+	(org-back-to-heading)
+      (error (unless (string-match-p "Before first headline" (cadr err)) (signal (car err) (cdr err)))))
     (let ((property (org-entry-get (point) "SORT" 'selective)))
       (pcase property
 	('t (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy))

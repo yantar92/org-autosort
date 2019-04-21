@@ -432,6 +432,9 @@ Signal user error and return nil if argument is not a sorting strategy."
   "Get sorting strategy at point for the current entry's subtree being sorted."
   (save-excursion
     (org-autosort--org-back-to-heading)
+    (condition-case err
+	(org-back-to-heading)
+      (error (unless (string-match-p "Before first headline" (cadr err)) (signal (car err) (cdr err)))))
     (let ((property (org-entry-get (point) "SORT" 'selective)))
       (pcase property
 	('t (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy))
@@ -653,14 +656,19 @@ CLOCK: [2018-10-14 Sun 00:07]--[2018-10-14 Sun 00:08] =>  0:01
 :CREATED:  [2018-10-20 Sat 16:46]
 :END:
 *** NEXT [#A] reply to this about org-autosort email |- Maikol Solís <notifications@github.com>: [yantar92/org-autosort] Upload to MELPA (#2) :EMAIL:
-SCHEDULED: <2019-03-23 Sat>
+SCHEDULED: <2019-04-05 Fri>
+:PROPERTIES:
+:SHOWFROMDATE: 2019-04-21
+:END:
 :PROPERTIES:
 :CREATED: [2019-02-28 Thu 09:15]
 :EMAIL-SOURCE: notmuch:id:yantar92/org-autosort/issues/2@github.com
 :SHOWFROMDATE: 2019-03-28 19:00
+:SHOWFROMDATE: 2019-03-05
 :END:
 :LOGBOOK:
-CLOCK: [2019-03-29 Fri 22:00]
+CLOCK: [2019-04-21 Sun 18:25]
+CLOCK: [2019-03-29 Fri 22:00]--[2019-03-29 Fri 22:52] =>  0:52
 CLOCK: [2019-03-18 Mon 18:24]--[2019-03-18 Mon 18:27] =>  0:03
 - State "NEXT"       from "TODO"       [2019-02-28 Thu 09:15]
 :END:
