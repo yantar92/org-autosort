@@ -655,6 +655,10 @@ CLOCK: [2018-10-14 Sun 00:07]--[2018-10-14 Sun 00:08] =>  0:01
 :PROPERTIES:
 :CREATED:  [2018-10-20 Sat 16:46]
 :END:
+*** TODO cache autosort [[file:~/.emacs.d/config.org]]
+:PROPERTIES:
+:CREATED: [2019-04-22 Mon 11:16]
+:END:
 *** NEXT [#A] reply to this about org-autosort email |- Maikol Solís <notifications@github.com>: [yantar92/org-autosort] Upload to MELPA (#2) :EMAIL:
 SCHEDULED: <2019-04-05 Fri>
 :PROPERTIES:
