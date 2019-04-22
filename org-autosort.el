@@ -369,7 +369,7 @@ Sort recursively if invoked with \\[universal-argument]."
                          (looking-at org-property-drawer-re))
                        (not (string-match ":SORT:" (match-string 0))))
              (search-forward ":SORT:" subtree-end 'noerror))))))
-    (outline-hide-sublevels 1)))
+    (org-set-startup-visibility)))
 
 (defun org-autosort-sort-entries-in-file-maybe ()
   "Sort all entries in the file recursively if `org-autosort-sort-at-file-open' is not nil."
