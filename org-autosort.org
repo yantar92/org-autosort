@@ -588,7 +588,7 @@ Sort recursively if invoked with \\[universal-argument]."
                          (looking-at org-property-drawer-re))
                        (not (string-match ":SORT:" (match-string 0))))
              (search-forward ":SORT:" subtree-end 'noerror))))))
-    (org-set-startup-visibility)))
+    (outline-hide-sublevels 1)))
 
 (defun org-autosort-sort-entries-in-file-maybe ()
   "Sort all entries in the file recursively if `org-autosort-sort-at-file-open' is not nil."
@@ -656,6 +656,7 @@ CLOCK: [2018-10-14 Sun 00:07]--[2018-10-14 Sun 00:08] =>  0:01
 :CREATED:  [2018-10-20 Sat 16:46]
 :END:
 *** NEXT [#A] reply to this about org-autosort email |- Maikol Solís <notifications@github.com>: [yantar92/org-autosort] Upload to MELPA (#2) :EMAIL:
+SCHEDULED: <2019-04-05 Fri>
 :PROPERTIES:
 :SHOWFROMDATE: 2019-04-21
 :END:
@@ -666,7 +667,7 @@ CLOCK: [2018-10-14 Sun 00:07]--[2018-10-14 Sun 00:08] =>  0:01
 :SHOWFROMDATE: 2019-03-05
 :END:
 :LOGBOOK:
-CLOCK: [2019-04-21 Sun 18:45]--[2019-04-21 Sun 18:48] =>  0:03
+CLOCK: [2019-04-21 Sun 18:45]
 CLOCK: [2019-04-21 Sun 18:25]--[2019-04-21 Sun 18:35] =>  0:10
 CLOCK: [2019-03-29 Fri 22:00]--[2019-03-29 Fri 22:52] =>  0:52
 CLOCK: [2019-03-18 Mon 18:24]--[2019-03-18 Mon 18:27] =>  0:03
@@ -679,7 +680,6 @@ https://github.com/melpa/melpa/blob/master/CONTRIBUTING.org
 SCHEDULED: <2019-04-22 Mon>
 :PROPERTIES:
 :CREATED:  [2019-04-21 Sun 18:45]
-:SHOWFROMDATE: 2019-04-22 15:00
 :END:
 **** NEXT Check metadata
 :PROPERTIES:
@@ -702,10 +702,6 @@ SCHEDULED: <2019-04-22 Mon>
 :CREATED:  [2019-04-21 Sun 18:46]
 :END:
 
-*** TODO cache autosort [[file:~/.emacs.d/config.org]]
-:PROPERTIES:
-:CREATED: [2019-04-22 Mon 11:16]
-:END:
 ** NEXT Versions                                           :NOEXPORT:NOARCHIVE:
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:15]
