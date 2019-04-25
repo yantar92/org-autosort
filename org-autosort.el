@@ -30,14 +30,21 @@
 
 ;;; Code:
 
+;; [[id:43318d0e-0c79-467b-ac2b-bb107575f6d1][Requires:1]]
+(require 'org)
+;; Requires:1 ends here
+
 ;; [[id:08e58824-f88a-4d3b-a79e-00a1514eb68a][Custom variables:1]]
 (defgroup org-autosort nil
-  "Customization options of org-autosort package.")
+  "Options concerning automatic sorting of entries in Org mode."
+  :tag "Org Autosort"
+  :group 'org)
 ;; Custom variables:1 ends here
 
 ;; [[id:08e58824-f88a-4d3b-a79e-00a1514eb68a][Custom variables:2]]
 (defcustom org-autosort-sort-all nil
-  "Sort entries if :SORT: property is not defined.")
+  "Sort entries if :SORT: property is not defined."
+  :type '(boolean))
 ;; Custom variables:2 ends here
 
 ;; [[id:08e58824-f88a-4d3b-a79e-00a1514eb68a][autosort-triggers]]
@@ -129,9 +136,9 @@ nil means that no sorting should be done by default."
   "Compare todo keywords A and B.  Return non nil if A<B."
   (let* ((todo-cmp-orgder (or org-autosort-todo-cmp-order
 			      org-todo-keywords-1))
-	 (posa (or (seq-position org-autosort-todo-cmp-order a)
+	 (posa (or (seq-position todo-cmp-order a)
 		   0))
-	 (posb (or (seq-position org-autosort-todo-cmp-order b)
+	 (posb (or (seq-position todo-cmp-order b)
 		   0)))
     (< posa posb)))
 ;; By todo keyword, custom:1 ends here
@@ -339,13 +346,15 @@ Make sure, folding state is not changed."
   "Sort org entries at point.
 Sort recursively if invoked with \\[universal-argument]."
   (interactive "P")
-  (if (equal ARG '(4))
-      (org-autosort-sort-entries-at-point-recursive)
-    (org-autosort-sort-entries-at-point-nonrecursive))
-  (while (not (eq org-cycle-subtree-status 'folded)) ;; magic constant...
-    (org-cycle))
-  (outline-show-branches) ;; probably, it should be configurable
-  )
+  (save-excursion
+    (org-autosort--org-back-to-heading)
+    (if (equal ARG '(4))
+	(org-autosort-sort-entries-at-point-recursive)
+      (org-autosort-sort-entries-at-point-nonrecursive))
+    (while (not (eq org-cycle-subtree-status 'folded)) ;; magic constant...
+      (org-cycle))
+    (outline-show-branches) ;; probably, it should be configurable
+    ))
 
 (defun org-autosort-sort-entries-in-file ()
   "Sort all entries in the file recursively."
@@ -379,7 +388,7 @@ Sort recursively if invoked with \\[universal-argument]."
 ;; General sorting routine:1 ends here
 
 ;; [[id:cf53b069-fcbb-45f9-9a80-e05f88d1fec5][File epilogue:1]]
-(provide 'org-autosort)
+    (provide 'org-autosort)
 
 ;;; org-autosort.el ends here
 ;; File epilogue:1 ends here
