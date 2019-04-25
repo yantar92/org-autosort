@@ -176,12 +176,15 @@ CLOCK: [2017-12-10 Sun 11:02]--[2017-12-10 Sun 11:03] =>  0:01
 :END:
 #+begin_src emacs-lisp
 (defgroup org-autosort nil
-  "Customization options of org-autosort package.")
+  "Options concerning automatic sorting of entries in Org mode."
+  :tag "Org Autosort"
+  :group 'org)
 #+end_src
 - to sort or not to sort
 #+begin_src emacs-lisp
 (defcustom org-autosort-sort-all nil
-  "Sort entries if :SORT: property is not defined.")
+  "Sort entries if :SORT: property is not defined."
+  :type '(boolean))
 #+end_src
 - auto sort triggers
 #+name: autosort-triggers
