@@ -575,13 +575,15 @@ Make sure, folding state is not changed."
   "Sort org entries at point.
 Sort recursively if invoked with \\[universal-argument]."
   (interactive "P")
-  (if (equal ARG '(4))
-      (org-autosort-sort-entries-at-point-recursive)
-    (org-autosort-sort-entries-at-point-nonrecursive))
-  (while (not (eq org-cycle-subtree-status 'folded)) ;; magic constant...
-    (org-cycle))
-  (outline-show-branches) ;; probably, it should be configurable
-  )
+  (save-excursion
+    (org-autosort--org-back-to-heading)
+    (if (equal ARG '(4))
+	(org-autosort-sort-entries-at-point-recursive)
+      (org-autosort-sort-entries-at-point-nonrecursive))
+    (while (not (eq org-cycle-subtree-status 'folded)) ;; magic constant...
+      (org-cycle))
+    (outline-show-branches) ;; probably, it should be configurable
+    ))
 
 (defun org-autosort-sort-entries-in-file ()
   "Sort all entries in the file recursively."
