@@ -150,6 +150,20 @@ CLOSED: [2017-12-11 Mon 15:58]
 
 ;;; Code:
 #+end_src
+*** DONE Requires
+CLOSED: [2019-04-25 Thu 21:29]
+:PROPERTIES:
+:CREATED:  [2019-04-25 Thu 21:26]
+:ID:       43318d0e-0c79-467b-ac2b-bb107575f6d1
+:END:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2019-04-25 Thu 21:29]
+:END:
+
+#+begin_src emacs-lisp
+(require 'org)
+#+end_src
+
 *** DONE Custom variables
 CLOSED: [2017-12-18 Mon 21:23]
 :PROPERTIES:
