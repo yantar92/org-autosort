@@ -310,9 +310,9 @@ CLOSED: [2018-09-20 Thu 14:45]
   "Compare todo keywords A and B.  Return non nil if A<B."
   (let* ((todo-cmp-orgder (or org-autosort-todo-cmp-order
 			      org-todo-keywords-1))
-	 (posa (or (seq-position org-autosort-todo-cmp-order a)
+	 (posa (or (seq-position todo-cmp-order a)
 		   0))
-	 (posb (or (seq-position org-autosort-todo-cmp-order b)
+	 (posb (or (seq-position todo-cmp-order b)
 		   0)))
     (< posa posb)))
 #+END_SRC
