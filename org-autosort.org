@@ -308,7 +308,7 @@ CLOSED: [2018-09-20 Thu 14:45]
   )
 (defun org-autosort-custom-cmp-todo (a b)
   "Compare todo keywords A and B.  Return non nil if A<B."
-  (let* ((todo-cmp-orgder (or org-autosort-todo-cmp-order
+  (let* ((todo-cmp-order (or org-autosort-todo-cmp-order
 			      org-todo-keywords-1))
 	 (posa (or (seq-position todo-cmp-order a)
 		   0))
@@ -698,10 +698,10 @@ https://github.com/melpa/melpa/blob/master/CONTRIBUTING.org
 SCHEDULED: <2019-04-22 Mon>
 :PROPERTIES:
 :CREATED:  [2019-04-21 Sun 18:45]
-:SHOWFROMDATE: 2019-04-22
+:SHOWFROMDATE: 2019-04-26 09:00
 :END:
 :LOGBOOK:
-CLOCK: [2019-04-25 Thu 21:21]
+CLOCK: [2019-04-25 Thu 21:21]--[2019-04-25 Thu 21:51] =>  0:30
 :END:
 **** NEXT Check metadata
 :PROPERTIES:

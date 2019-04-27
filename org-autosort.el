@@ -134,7 +134,7 @@ nil means that no sorting should be done by default."
   )
 (defun org-autosort-custom-cmp-todo (a b)
   "Compare todo keywords A and B.  Return non nil if A<B."
-  (let* ((todo-cmp-orgder (or org-autosort-todo-cmp-order
+  (let* ((todo-cmp-order (or org-autosort-todo-cmp-order
 			      org-todo-keywords-1))
 	 (posa (or (seq-position todo-cmp-order a)
 		   0))
@@ -388,7 +388,7 @@ Sort recursively if invoked with \\[universal-argument]."
 ;; General sorting routine:1 ends here
 
 ;; [[id:cf53b069-fcbb-45f9-9a80-e05f88d1fec5][File epilogue:1]]
-    (provide 'org-autosort)
+(provide 'org-autosort)
 
 ;;; org-autosort.el ends here
 ;; File epilogue:1 ends here
