@@ -350,6 +350,7 @@ Make sure, folding state is not changed."
 		 (org-autosort-construct-cmp-function))
 	(outline-next-heading)))))
 
+;;;###autoload
 (defun org-autosort-sort-entries-at-point (&optional ARG)
   "Sort org entries at point.
 Sort recursively if invoked with \\[universal-argument]."
@@ -364,6 +365,7 @@ Sort recursively if invoked with \\[universal-argument]."
     (outline-show-branches) ;; probably, it should be configurable
     ))
 
+;;;###autoload
 (defun org-autosort-sort-entries-in-file ()
   "Sort all entries in the file recursively."
   (interactive)
@@ -388,6 +390,7 @@ Sort recursively if invoked with \\[universal-argument]."
              (search-forward ":SORT:" subtree-end 'noerror))))))
     (outline-hide-sublevels 1)))
 
+;;;###autoload
 (defun org-autosort-sort-entries-in-file-maybe ()
   "Sort all entries in the file recursively if `org-autosort-sort-at-file-open' is not nil."
   (when org-autosort-sort-at-file-open (org-autosort-sort-entries-in-file)))
