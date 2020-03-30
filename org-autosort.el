@@ -28,6 +28,14 @@
 ;; This package aims to implement an automatic sorting of the subtrees in org files.
 ;; The sorting order can be set globally through all the org files, locally in file, or locally in a subtree using :SORT: property.
 
+;; Example configuration:
+;; 
+;; (use-package org-autosort
+;; :config
+;; (bind-key "C-c C-S-s" 'org-autosort-sort-entries-at-point org-mode-map)
+;; (add-hook 'org-mode-hook #'org-autosort-sort-entries-in-file-maybe)
+;; )
+
 ;;; Code:
 
 ;; [[id:43318d0e-0c79-467b-ac2b-bb107575f6d1][Requires:1]]
@@ -383,8 +391,6 @@ Sort recursively if invoked with \\[universal-argument]."
 (defun org-autosort-sort-entries-in-file-maybe ()
   "Sort all entries in the file recursively if `org-autosort-sort-at-file-open' is not nil."
   (when org-autosort-sort-at-file-open (org-autosort-sort-entries-in-file)))
-
-(add-hook 'org-mode-hook #'org-autosort-sort-entries-in-file-maybe)
 ;; General sorting routine:1 ends here
 
 ;; [[id:cf53b069-fcbb-45f9-9a80-e05f88d1fec5][File epilogue:1]]
