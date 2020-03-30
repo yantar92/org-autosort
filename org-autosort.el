@@ -7,7 +7,7 @@
 ;; Created: 10 Dec 2017
 ;; Keywords: matching, outlines
 ;; Homepage: https://github.com/yantar92/org-autosort
-;; Package-Requires: (org)
+;; Package-Requires: ((emacs "25.1"))
 
 ;; This file is not part of GNU Emacs.
 
