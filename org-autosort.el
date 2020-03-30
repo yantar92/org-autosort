@@ -68,7 +68,7 @@
 					  (todo-up . (:key org-get-todo-state :cmp org-autosort-custom-cmp-todo))
 					  (todo-down . (:key org-get-todo-state :cmp (lambda (a b)
 										       (not (org-autosort-custom-cmp-todo a b)))))
-					  ;;					  
+					  ;;
 					  (text-up . (:key org-autosort-get-text :cmp string<))
 					  (text-down . (:key org-autosort-get-text :cmp string>))
                                           (priority-up . (:key (org-autosort-get-property "PRIORITY") :cmp string<))
@@ -138,8 +138,8 @@ nil means that no sorting should be done by default."
 ;; [[id:87e5b164-fe1f-4618-9b07-741c27e37bc0][By todo keyword, custom:1]]
 (defvar org-autosort-todo-cmp-order nil
   "Order of todo keywords to be shown in sorted subtrees.
-       Follow `org-todo-keywords-1' if nil."
-  )
+       Follow `org-todo-keywords-1' if nil.")
+
 (defun org-autosort-custom-cmp-todo (a b)
   "Compare todo keywords A and B.  Return non nil if A<B."
   (let* ((todo-cmp-order (or org-autosort-todo-cmp-order
