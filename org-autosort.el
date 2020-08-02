@@ -294,8 +294,8 @@ This function returns a list of sorting keys."
 	    (while (and (not done)
 			(not (seq-empty-p resultlist)))
 	      (let ((elem (pop resultlist)))
-		(unless (and (car elem)
-			     (cdr elem)) ; not equal
+		(unless (eq (car elem)
+			    (cdr elem)) ; not equal
 		  (setq done t)
 		  (setq result (car elem)))))
 	    result))))))
