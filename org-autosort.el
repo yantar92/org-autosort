@@ -353,17 +353,20 @@ Make sure, folding state is not changed."
 ;;;###autoload
 (defun org-autosort-sort-entries-at-point (&optional ARG)
   "Sort org entries at point.
-Sort recursively if invoked with \\[universal-argument]."
+Sort recursively if invoked with \\[universal-argument].
+This function will use `org-autosort-global-sorting-strategy' if
+heading at point does not have (or inherit) :SORT: property."
   (interactive "P")
-  (save-excursion
-    (org-autosort--org-back-to-heading)
-    (if (equal ARG '(4))
-	(org-autosort-sort-entries-at-point-recursive)
-      (org-autosort-sort-entries-at-point-nonrecursive))
-    (while (not (eq org-cycle-subtree-status 'folded)) ;; magic constant...
-      (org-cycle))
-    (outline-show-branches) ;; probably, it should be configurable
-    ))
+  (let ((org-autosort-sort-all t))
+    (save-excursion
+      (org-autosort--org-back-to-heading)
+      (if (equal ARG '(4))
+	  (org-autosort-sort-entries-at-point-recursive)
+	(org-autosort-sort-entries-at-point-nonrecursive))
+      (while (not (eq org-cycle-subtree-status 'folded)) ;; magic constant...
+	(org-cycle))
+      (org-fold-show-branches) ;; probably, it should be configurable
+      )))
 
 ;;;###autoload
 (defun org-autosort-sort-entries-in-file ()
