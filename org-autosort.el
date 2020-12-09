@@ -363,7 +363,9 @@ heading at point does not have (or inherit) :SORT: property."
 	(org-autosort-sort-entries-at-point-nonrecursive))
       (while (not (eq org-cycle-subtree-status 'folded)) ;; magic constant...
 	(org-cycle))
-      (org-fold-show-branches) ;; probably, it should be configurable
+      ;; (org-show-branches)
+      ;; (org-fold-show-branches)
+      ;; probably, it should be configurable
       )))
 
 ;;;###autoload
