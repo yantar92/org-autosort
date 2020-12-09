@@ -387,11 +387,13 @@ heading at point does not have (or inherit) :SORT: property."
 	   (search-forward ":SORT:" subtree-end 'noerror)
            (while (and (< (point) subtree-end)
 		       (save-excursion
-			 (re-search-backward org-property-start-re (save-excursion (org-back-to-heading)) t)
-                         (looking-at org-property-drawer-re))
-                       (not (string-match ":SORT:" (match-string 0))))
+			 (let ((beg (save-excursion (org-back-to-heading))))
+			   (re-search-backward org-property-start-re (if (eq beg t) (point) beg) t))
+			 (not (string-match ":SORT:" (match-string 0)))))
              (search-forward ":SORT:" subtree-end 'noerror))))))
-    (outline-hide-sublevels 1)))
+    ;; (org-show-context)
+    ;; (org-fold-show-context)
+    ))
 
 ;;;###autoload
 (defun org-autosort-sort-entries-in-file-maybe ()
