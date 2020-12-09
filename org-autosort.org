@@ -17,11 +17,11 @@ CLOCK: [2017-12-25 Mon 21:58]--[2017-12-25 Mon 22:00] =>  0:02
 ** Motivation
 :PROPERTIES:
 :END:
-Org-mode has many useful commands for sorting entries in the agenda. 
+Org-mode has many useful commands for sorting entries in the agenda.
 However, sorting of the actual org files is
 rather limited. We only have =org-sort=, which can sort
-by a single criteria, unlike =org-agenda-sorting-strategy=, where one can 
-setup a complicated sorting strategy. 
+by a single criteria, unlike =org-agenda-sorting-strategy=, where one can
+setup a complicated sorting strategy.
 
 Sometimes, one may have a need to look at some kind of long list of
 TODO items (for example, this infinitely growing list of things you
@@ -34,7 +34,7 @@ something, that can help here.
 
 Of course, you can still use =org-sort= or agenda view with restriction
 to the current subtree, but it may be disrupting if you want to look
-through multiple of such a lists.  
+through multiple of such a lists.
 
 The solution is to implement automatic sorting of subtrees in org
 files.
@@ -44,7 +44,7 @@ files.
 This package aims to implement an automatic sorting of the subtrees
 in org files. The sorting order can be set globally through all the
 org files, locally in file, or locally in a subtree using =:SORT:=
-property.  
+property.
 
 Everything, except global sorting order, can be set using standard
 inheritance capabilities of the org properties (file local, subtree
@@ -71,7 +71,7 @@ and so on.
 - =t= :: use =org-autosort-global-sorting-strategy=
 - not defined or =nil= :: sort if =org-autosort-sort-all= is non =nil=
 - empty or =none= :: do not sort entries
-- list :: define separate sorting strategy 
+- list :: define separate sorting strategy
 
 The sorting can be done after:
 - opening the org file
@@ -104,7 +104,7 @@ Default [[org-autosort-global-sorting-strategy][sorting strategy]] is
 
 ** NEXT Implementation                                     :NOEXPORT:NOARCHIVE:
 :PROPERTIES:
-:header-args+: :tangle yes 
+:header-args+: :tangle yes
 :MODIFIED: 2018-03-14 10:38
 :END:
 :LOGBOOK:
@@ -127,7 +127,7 @@ CLOSED: [2017-12-11 Mon 15:58]
 ;; Created: 10 Dec 2017
 ;; Keywords: matching, outlines
 ;; Homepage: https://github.com/yantar92/org-autosort
-;; Package-Requires: (org)
+;; Package-Requires: ((emacs "25.1"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -147,6 +147,14 @@ CLOSED: [2017-12-11 Mon 15:58]
 
 ;; This package aims to implement an automatic sorting of the subtrees in org files.
 ;; The sorting order can be set globally through all the org files, locally in file, or locally in a subtree using :SORT: property.
+
+;; Example configuration:
+;; 
+;; (use-package org-autosort
+;; :config
+;; (bind-key "C-c C-S-s" 'org-autosort-sort-entries-at-point org-mode-map)
+;; (add-hook 'org-mode-hook #'org-autosort-sort-entries-in-file-maybe)
+;; )
 
 ;;; Code:
 #+end_src
@@ -202,7 +210,7 @@ CLOCK: [2017-12-10 Sun 11:02]--[2017-12-10 Sun 11:03] =>  0:01
 					  (todo-up . (:key org-get-todo-state :cmp org-autosort-custom-cmp-todo))
 					  (todo-down . (:key org-get-todo-state :cmp (lambda (a b)
 										       (not (org-autosort-custom-cmp-todo a b)))))
-					  ;;					  
+					  ;;
 					  (text-up . (:key org-autosort-get-text :cmp string<))
 					  (text-down . (:key org-autosort-get-text :cmp string>))
                                           (priority-up . (:key (org-autosort-get-property "PRIORITY") :cmp string<))
@@ -271,7 +279,7 @@ CLOSED: [2018-09-20 Thu 14:46]
 :LOGBOOK:
 - State "DONE"       from "NEXT"       [2018-09-20 Thu 14:46]
 :END:
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 (defun org-autosort-get-property (property)
   "Get the value of PROPERTY for sorting."
   (org-entry-get (point) property 'selective))
@@ -284,7 +292,7 @@ CLOSED: [2018-09-20 Thu 14:45]
 :LOGBOOK:
 - State "DONE"       from "NEXT"       [2018-09-20 Thu 14:45]
 :END:
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 (defun org-autosort-get-todo ()
   "Get the value of todo keyword for sorting." ; stolen from org-sort-entries in org.el
   (let* ((m (org-get-todo-state))
@@ -304,8 +312,8 @@ CLOSED: [2018-09-20 Thu 14:45]
 #+BEGIN_SRC emacs-lisp
 (defvar org-autosort-todo-cmp-order nil
   "Order of todo keywords to be shown in sorted subtrees.
-       Follow `org-todo-keywords-1' if nil."
-  )
+       Follow `org-todo-keywords-1' if nil.")
+
 (defun org-autosort-custom-cmp-todo (a b)
   "Compare todo keywords A and B.  Return non nil if A<B."
   (let* ((todo-cmp-order (or org-autosort-todo-cmp-order
@@ -358,8 +366,9 @@ CLOCK: [2018-10-07 Sun 15:40]--[2018-10-07 Sun 16:30] =>  0:50
       (encode-time 0 (or minute 0) (or hour 0) day month year))))
 #+END_SRC
 **** NEXT By deadline
-SCHEDULED: <2019-02-02 Sat>
 :PROPERTIES:
+:SHOWFROMDATE: 2020-01-09
+:Effort:   0:20
 :END:
 :LOGBOOK:
 - State "NEXT"       from "TODO"       [2018-10-08 Mon 13:49]
@@ -379,8 +388,7 @@ SCHEDULED: <2019-02-02 Sat>
 **** TODO By any timestamp
 :PROPERTIES:
 :END:
-*** DONE [#A] General sorting routine
-CLOSED: [2017-12-25 Mon 22:00] SCHEDULED: <2017-12-18 Mon>
+*** General sorting routine
 :PROPERTIES:
 :ID:       7b077f97-a744-4197-9b4f-015af71ab95f
 :END:
@@ -401,10 +409,11 @@ CLOCK: [2017-12-25 Mon 15:14]--[2017-12-25 Mon 15:18] =>  0:04
     (condition-case err
 	(org-back-to-heading)
       (error
-       (if (string-match-p "Before first headline at position"
-			   (error-message-string err))
-           (outline-next-heading)
-	 (signal (car err) (cdr err)))))))
+       (let ((error-string (error-message-string err)))
+         (if (or (string-match-p "Before first headline at position" error-string)
+                 (string-match-p "Before first heading" error-string))
+             (outline-next-heading)
+	   (signal (car err) (cdr err))))))))
 
 (defun org-autosort-sorting-strategy-elementp (elm)
   "Validate element ELM of sorting strategy.  Return (:key ... [:cmp ...]) if element and nil otherwise."
@@ -449,14 +458,11 @@ Signal user error and return nil if argument is not a sorting strategy."
   "Get sorting strategy at point for the current entry's subtree being sorted."
   (save-excursion
     (org-autosort--org-back-to-heading)
-    (condition-case err
-	(org-back-to-heading)
-      (error (unless (string-match-p "Before first headline" (cadr err)) (signal (car err) (cdr err)))))
     (let ((property (org-entry-get (point) "SORT" 'selective)))
       (pcase property
 	('t (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy))
 	('nil (and org-autosort-sort-all
-		   (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy)))
+		 (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy)))
 	("" nil)
 	('none nil)
 	(_ (if (= (cdr (read-from-string property))
@@ -515,8 +521,8 @@ This function returns a list of sorting keys."
 	    (while (and (not done)
 			(not (seq-empty-p resultlist)))
 	      (let ((elem (pop resultlist)))
-		(unless (and (car elem)
-			     (cdr elem)) ; not equal
+		(unless (eq (car elem)
+			    (cdr elem)) ; not equal
 		  (setq done t)
 		  (setq result (car elem)))))
 	    result))))))
@@ -571,20 +577,27 @@ Make sure, folding state is not changed."
 		 (org-autosort-construct-cmp-function))
 	(outline-next-heading)))))
 
+;;;###autoload
 (defun org-autosort-sort-entries-at-point (&optional ARG)
   "Sort org entries at point.
-Sort recursively if invoked with \\[universal-argument]."
+Sort recursively if invoked with \\[universal-argument].
+This function will use `org-autosort-global-sorting-strategy' if
+heading at point does not have (or inherit) :SORT: property."
   (interactive "P")
-  (save-excursion
-    (org-autosort--org-back-to-heading)
-    (if (equal ARG '(4))
-	(org-autosort-sort-entries-at-point-recursive)
-      (org-autosort-sort-entries-at-point-nonrecursive))
-    (while (not (eq org-cycle-subtree-status 'folded)) ;; magic constant...
-      (org-cycle))
-    (outline-show-branches) ;; probably, it should be configurable
-    ))
+  (let ((org-autosort-sort-all t))
+    (save-excursion
+      (org-autosort--org-back-to-heading)
+      (if (equal ARG '(4))
+	  (org-autosort-sort-entries-at-point-recursive)
+	(org-autosort-sort-entries-at-point-nonrecursive))
+      (while (not (eq org-cycle-subtree-status 'folded)) ;; magic constant...
+	(org-cycle))
+      ;; (org-show-branches)
+      ;; (org-fold-show-branches)
+      ;; probably, it should be configurable
+      )))
 
+;;;###autoload
 (defun org-autosort-sort-entries-in-file ()
   "Sort all entries in the file recursively."
   (interactive)
@@ -603,126 +616,33 @@ Sort recursively if invoked with \\[universal-argument]."
 	   (search-forward ":SORT:" subtree-end 'noerror)
            (while (and (< (point) subtree-end)
 		       (save-excursion
-			 (re-search-backward org-property-start-re (save-excursion (org-back-to-heading)) t)
-                         (looking-at org-property-drawer-re))
-                       (not (string-match ":SORT:" (match-string 0))))
+			 (let ((beg (save-excursion (org-back-to-heading))))
+			   (re-search-backward org-property-start-re (if (eq beg t) (point) beg) t))
+			 (not (string-match ":SORT:" (match-string 0)))))
              (search-forward ":SORT:" subtree-end 'noerror))))))
-    (outline-hide-sublevels 1)))
+    ;; (org-show-context)
+    ;; (org-fold-show-context)
+    ))
 
+;;;###autoload
 (defun org-autosort-sort-entries-in-file-maybe ()
   "Sort all entries in the file recursively if `org-autosort-sort-at-file-open' is not nil."
   (when org-autosort-sort-at-file-open (org-autosort-sort-entries-in-file)))
-
-(add-hook 'org-mode-hook #'org-autosort-sort-entries-in-file-maybe)
 #+end_src
+
+#+RESULTS:
+: org-autosort-sort-entries-in-file-maybe
+
 *** DONE File epilogue
 CLOSED: [2017-12-10 Sun 19:40]
 :PROPERTIES:
 :ID:       cf53b069-fcbb-45f9-9a80-e05f88d1fec5
 :END:
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 (provide 'org-autosort)
 
 ;;; org-autosort.el ends here
 #+end_src
-** Ideas                                                     :SKIP:NOEXPORT:
-:PROPERTIES:
-:SORT:     (todo-down)
-:END:
-*** TODO Sort only items, matching org search regex
-:PROPERTIES:
-:END:
-*** TODO should be able to define alias in sorting strategy
-:PROPERTIES:
-:CREATED:  [2017-12-18 Mon 20:58]
-:END:
-:LOGBOOK:
-CLOCK: [2017-12-18 Mon 20:58]--[2017-12-18 Mon 20:59] =>  0:01
-:END:
-*** TODO use local hook in autosort for toggle hooks
-:PROPERTIES:
-:CREATED:  [2017-12-20 Wed 15:23]
-:END:
-*** TODO add this functionality? [[http://sachachua.com/blog/2017/12/sorting-org-mode-lists-using-a-sequence-of-regular-expressions/][Sorting Org Mode lists using a sequence of regular expressions  13]] :COMMON:
-:PROPERTIES:
-:CREATED:  [2017-12-21 Thu 23:50]
-:Source:   http://sachachua.com/blog/2017/12/sorting-org-mode-lists-using-a-sequence-of-regular-expressions/
-:END:
-*** TODO Add trigger to not read lisp from sort property it is not safe
-:PROPERTIES:
-:CREATED:  [2017-12-25 Mon 22:05]
-:END:
-*** TODO sort signalling error -resolve [[id:e9132d5f-cc43-4bae-b9ed-244e21e8b8cc][Test test]]
-:PROPERTIES:
-:CREATED: [2017-12-29 Fri 22:37]
-:END:
-:LOGBOOK:
-CLOCK: [2017-12-29 Fri 22:37]--[2017-12-29 Fri 22:38] =>  0:01
-:END:
-*** TODO Add trigger to not read lisp from sort property it is not safe
-:PROPERTIES:
-:CREATED:  [2017-12-25 Mon 22:05]
-:END:
-*** TODO it appears that it attempts to sort something here: [[file:~/.emacs.d/config.org]]. Should not be the case
-:PROPERTIES:
-:CREATED: [2018-10-14 Sun 00:07]
-:END:
-:LOGBOOK:
-CLOCK: [2018-10-14 Sun 00:07]--[2018-10-14 Sun 00:08] =>  0:01
-:END:
-*** TODO Add an option to sort by an regexp - the entries matching regexp are shown first
-:PROPERTIES:
-:CREATED:  [2018-10-20 Sat 16:46]
-:END:
-*** TODO cache autosort [[file:~/.emacs.d/config.org]]
-:PROPERTIES:
-:CREATED: [2019-04-22 Mon 11:16]
-:END:
-*** NEXT [#A] reply to this about org-autosort email |- Maikol Solís <notifications@github.com>: [yantar92/org-autosort] Upload to MELPA (#2) :EMAIL:
-:PROPERTIES:
-:CREATED: [2019-02-28 Thu 09:15]
-:EMAIL-SOURCE: notmuch:id:yantar92/org-autosort/issues/2@github.com
-:SHOWFROMDATE: 2019-03-28 19:00
-:SHOWFROMDATE: 2019-03-05
-:END:
-:LOGBOOK:
-CLOCK: [2019-04-21 Sun 18:25]--[2019-04-21 Sun 18:35] =>  0:10
-CLOCK: [2019-03-29 Fri 22:00]--[2019-03-29 Fri 22:52] =>  0:52
-CLOCK: [2019-03-18 Mon 18:24]--[2019-03-18 Mon 18:27] =>  0:03
-- State "NEXT"       from "TODO"       [2019-02-28 Thu 09:15]
-:END:
-[2019-02-28 Thu 09:15]
-
-https://github.com/melpa/melpa/blob/master/CONTRIBUTING.org
-**** NEXT [#A] Make sure the code conventions are met
-SCHEDULED: <2019-04-22 Mon>
-:PROPERTIES:
-:CREATED:  [2019-04-21 Sun 18:45]
-:SHOWFROMDATE: 2019-04-26 09:00
-:END:
-:LOGBOOK:
-CLOCK: [2019-04-25 Thu 21:21]--[2019-04-25 Thu 21:51] =>  0:30
-:END:
-**** NEXT Check metadata
-:PROPERTIES:
-:CREATED:  [2019-04-21 Sun 18:45]
-:END:
-**** NEXT Lint everything
-:PROPERTIES:
-:CREATED:  [2019-04-21 Sun 18:45]
-:END:
-**** NEXT Tag commits
-:PROPERTIES:
-:CREATED:  [2019-04-21 Sun 18:45]
-:END:
-**** NEXT Make recepy
-:PROPERTIES:
-:CREATED:  [2019-04-21 Sun 18:46]
-:END:
-**** NEXT Pull request on Melpa
-:PROPERTIES:
-:CREATED:  [2019-04-21 Sun 18:46]
-:END:
 
 ** NEXT Versions                                           :NOEXPORT:NOARCHIVE:
 :PROPERTIES:
@@ -870,9 +790,10 @@ CLOSED: [2018-10-07 Sun 16:54] SCHEDULED: <2018-09-22 Sat>
 CLOCK: [2018-10-07 Sun 16:33]--[2018-10-07 Sun 16:54] =>  0:21
 :END:
 ***** NEXT sort lists
-SCHEDULED: <2019-02-02 Sat>
       :PROPERTIES:
       :CREATED:  [2018-10-08 Mon 13:50]
+      :SHOWFROMDATE: 2019-11-30
+      :Effort:   1:00
       :END:
       :LOGBOOK:
       - State "NEXT"       from "TODO"       [2018-10-08 Mon 13:51]
@@ -914,4 +835,28 @@ SCHEDULED: <2019-02-02 Sat>
 **** 1.0
 :PROPERTIES:
 :CREATED:  [2017-12-28 Thu 23:16]
+:END:
+** TODO  user2428107 [Stackoverflow] (2020) How can I apply org-sort-entries using a custom TODO keyword order? :BOOKMARK:
+:PROPERTIES:
+:ID: bb7c7056c6798fdad6ea705179a9e2b6e3ee94df
+:CREATED: [2020-08-22 Sat 15:22]
+:Source: https://stackoverflow.com/questions/63522981/how-can-i-apply-org-sort-entries-using-a-custom-todo-keyword-order
+:END:
+:LOGBOOK:
+- Refiled on [2020-08-22 Sat 16:53]
+:END:
+:BIBTEX:
+#+begin_src bibtex
+@misc{bb7c7056c6798fdad6ea705179a9e2b6e3ee94df,
+  author =       {user2428107},
+  howpublished = {Stackoverflow},
+  keywords =     {emacs, org-mode},
+  note =         {Online; accessed 22 August 2020},
+  title =        {How can I apply org-sort-entries using a custom TODO
+                  keyword order?},
+  url =
+                  {https://stackoverflow.com/questions/63522981/how-can-i-apply-org-sort-entries-using-a-custom-todo-keyword-order},
+  year =         2020,
+}
+#+end_src
 :END:
