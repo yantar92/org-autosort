@@ -180,10 +180,11 @@ nil means that no sorting should be done by default."
     (condition-case err
 	(org-back-to-heading)
       (error
-       (if (string-match-p "Before first headline at position"
-			   (error-message-string err))
-           (outline-next-heading)
-	 (signal (car err) (cdr err)))))))
+       (let ((error-string (error-message-string err)))
+         (if (or (string-match-p "Before first headline at position" error-string)
+                 (string-match-p "Before first heading" error-string))
+             (outline-next-heading)
+	   (signal (car err) (cdr err))))))))
 
 (defun org-autosort-sorting-strategy-elementp (elm)
   "Validate element ELM of sorting strategy.  Return (:key ... [:cmp ...]) if element and nil otherwise."
@@ -228,14 +229,11 @@ Signal user error and return nil if argument is not a sorting strategy."
   "Get sorting strategy at point for the current entry's subtree being sorted."
   (save-excursion
     (org-autosort--org-back-to-heading)
-    (condition-case err
-	(org-back-to-heading)
-      (error (unless (string-match-p "Before first headline" (cadr err)) (signal (car err) (cdr err)))))
     (let ((property (org-entry-get (point) "SORT" 'selective)))
       (pcase property
 	('t (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy))
 	('nil (and org-autosort-sort-all
-		   (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy)))
+		 (org-autosort-sorting-strategyp org-autosort-global-sorting-strategy)))
 	("" nil)
 	('none nil)
 	(_ (if (= (cdr (read-from-string property))
