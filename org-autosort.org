@@ -3,11 +3,15 @@
 #+OPTIONS: tags:nil todo:nil num:nil
 #+PROPERTY: header-args+ :tangle no
 
-* NEXT Automatic sorting of items in org mode                        :COMMON:
+* SOMEDAY Automatic sorting of items in org mode :COMMON:SOMEDAY:
 :PROPERTIES:
 :ORG-TIME-BALANCE-MULTIPLIER: -0.2
+:SUMMARY:  Get more time
 :END:
 :LOGBOOK:
+- State "SOMEDAY"    from "HOLD"          [2021-05-15 Sat 14:13]
+- State "HOLD"       from "NEXT"          [2020-12-11 Fri 15:59] \\
+  Get more time
 CLOCK: [2018-09-20 Thu 15:53]--[2018-09-20 Thu 15:56] =>  0:03
 CLOCK: [2018-09-20 Thu 14:47]--[2018-09-20 Thu 15:31] =>  0:44
 - State "NEXT"       from "NEXT"       [2018-01-01 Mon 13:31]
